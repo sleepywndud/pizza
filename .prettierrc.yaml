@@ -1,0 +1,12 @@
+# The formatter ‘Prettier’ was teacher-approved.
+# ‘Prettier’ only increases the visibility of code. It does not affect functionality.
+
+tabWidth: 4
+useTabs: True
+singleQuote: true
+printWidth: 100
+
+plugins:
+    - "@awmottaz/prettier-plugin-void-html"
+    # This plugin removes trailing slashes from HTML elements (as in like <link/>).
+    # This lets me folow the HTML conventions easier.
