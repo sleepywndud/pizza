@@ -10,7 +10,7 @@ from imports import *
 
 @app.route("/", methods=["GET", "POST"])
 def main():
-    return "Hello world"
+    return render_template("index.html")  # add variables inside the brackets
 
 
 if __name__ == "__main__":
