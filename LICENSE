@@ -1,13 +1,25 @@
-Copyright (c) 2026 Juyoung (James) Park. 
+Copyright (c) 2026 Juyoung (James) Park.
 All rights reserved.
 
-Permission is granted, free of charge, to any person obtaining a copy of this
-software and its associated documentation files (the “Software”), to use, copy,
-modify, merge, publish, distribute, and/or sell copies of the Software.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the “Software”), to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software subject to the following conditions:
 
-However, academic use is not permitted.
+This Software may NOT be used in whole, for any academic purposes.
+Access to this repository does NOT imply permission to use the work for academic
+purposes.
 
-For the purposes of this license, academic use includes (but is not limited to)
-using the Software in coursework, assignments, school projects, internal exam
-projects, and/or any other work submitted for academic credit, grading, or formal
-assessment.
+For the purposes of this license, “academic purpose” includes, but is not
+limited to:
+- submitting the Software for coursework or assignments,
+- subimtting the Software for school or university projects,
+- submitting the Software for internal/external assessments or examinations,
+- submitting the Software for academic credit, grading, or formal evaluation.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
