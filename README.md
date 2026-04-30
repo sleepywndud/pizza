@@ -5,7 +5,7 @@ Project started on: 1st of May, 2026.
 
 **DUE: 14th of August, 2026.**
 
-This program is for the following standards:\
+This program is for the following standards:
 - 91896 (Python)
 - 91897 (Documentation)
 - 91892 (Database)
