@@ -15,7 +15,7 @@ This program is for the following standards:\
 
 AUTHENTICITY:
 
-1. All work submitted are original work(s) of James Juyoung Park.\
+1. All work submitted are original work(s) of James Juyoung Park.
 2. Any sources of information used/any help received from AI and/or other people will be stated in the Google Doc.
 3. Students taking the same Software Development course with me in 2026 MUST abide by `LICENSE.md` when using/viewing this repository.
 
