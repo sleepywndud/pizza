@@ -8,11 +8,24 @@ Project Started on the 1st of May, 2026.
 from imports import *
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def main():
-    return render_template(
-        "index.html"
-    )  # add variables inside the brackets later when passing variables to render template
+    return render_template("index.html")
+
+
+@app.route("/snacks")
+def snacks():
+    return render_template("snacks.html")
+
+
+@app.route("/drinks")
+def drinks():
+    return render_template("drinks.html")
+
+
+@app.route("/customize")
+def customize():
+    return render_template("customize.html")
 
 
 if __name__ == "__main__":

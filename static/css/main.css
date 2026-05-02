@@ -1,3 +1,8 @@
+@font-face {
+	font-family: SN Pro;
+	src: url(../fonts/SN_Pro/SNPro-VariableFont_wght.ttf);
+}
+
 :root {
 	--white-main: #f6f7fa;
 	--blue-main: #0145f2;
@@ -7,6 +12,48 @@
 }
 
 body {
-	background-color: var(white-main);
+	background-color: var(--white-main);
 	color: var(--grey-dark);
+	margin: 0;
+	font-family: SN Pro;
+}
+
+.divider {
+	margin: 64px;
+}
+
+/* (navbar) https://github.com/sleepywndud/Te-Puia used */
+.navbar {
+	/* ensures the navbar is on top of other elements */
+	z-index: 999999999999;
+
+	/* fixes the navbar's position at the top of the page */
+	/* navbar constantly there even when scrolled */
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	background-color: var(--blue-main);
+	opacity: 100%;
+	display: flex;
+	align-items: center;
+	padding: 1.2rem;
+}
+
+.navbar a {
+	padding-left: 0.5rem;
+	padding-right: 10rem;
+
+	color: var(--white-main);
+	text-decoration: none;
+	font-size: 20px;
+}
+
+.navbar a:hover {
+	padding-left: 0.5rem;
+	padding-right: 10rem;
+
+	color: var(--grey-light2);
+	text-decoration: underline;
 }
