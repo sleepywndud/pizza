@@ -38,7 +38,7 @@ body {
 	opacity: 100%;
 	display: flex;
 	align-items: center;
-	padding: 1.2rem;
+	padding: 1.4rem;
 }
 
 .navbar a {
@@ -56,4 +56,48 @@ body {
 
 	color: var(--grey-light2);
 	text-decoration: underline;
+	font-weight: bolder;
+}
+
+.grid_2-3 {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
+	padding: 0 64px;
+}
+
+.item-pizza {
+	width: 85%;
+	background-color: var(--grey-light1);
+	text-align: center;
+	border-radius: 10%;
+	padding-top: 35px;
+	margin-bottom: 40px;
+}
+
+.item-pizza img {
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+	width: 256px;
+	border-radius: 10%;
+}
+
+.item-pizza p {
+	color: var(--grey-dark);
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.add-to-order {
+	width: 160px;
+	height: 35px;
+	border-radius: 100px;
+	border-style: none;
+	background-color: var(--blue-main);
+	color: var(--white-main);
+	font-weight: bold;
+	font-family: SN Pro;
+	font-size: 18px;
 }
