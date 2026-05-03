@@ -77,6 +77,14 @@ footer a {
 	grid-row-gap: 0px;
 }
 
+.menu-section {
+	margin: 32px;
+}
+
+.order-section {
+	background-color: var(--grey-light1);
+}
+
 /* 1 by 1 grid */
 .grid_1-1 {
 	display: grid;
@@ -92,7 +100,6 @@ footer a {
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(2, 1fr);
 	gap: 20px;
-	padding: 64px;
 }
 
 .item-pizza {
@@ -112,6 +119,9 @@ footer a {
 	width: 100%;
 	height: auto;
 	border-radius: 10%;
+	border-style: solid;
+	border-color: var(--grey-light2);
+	border-width: 7px;
 	object-fit: contain;
 }
 
