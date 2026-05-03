@@ -29,7 +29,7 @@ body {
 
 	/* fixes the navbar's position at the top of the page */
 	/* navbar constantly there even when scrolled */
-	position: fixed;
+	/* position: fixed; */
 	top: 0;
 	left: 0;
 
