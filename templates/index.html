@@ -15,30 +15,33 @@
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
 			</nav>
 		</header>
-		<!-- header (navbar) end -->
+		<!-- header (navbar) end -->f
 		<div class="divider"></div>
 		<main>
-			<h1 style="opacity: 0">...</h1>
-			<h1>Hello!</h1>
-			<h1 style="opacity: 0">...</h1>
-			<!-- menu grid start -->
-			<div class="grid_2-3">
-				{% for pizza in data %}
-				<div class="item-pizza">
-					<img
-						src="{{ url_for('static', filename='images/menu/pizza/' + pizza[3]) }}"
-						alt="{{ pizza[1] + 'Image'}}"
-					>
-					<p style="margin-bottom: 0">{{ pizza[1] }}</p>
-					<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
+			<h1>Pizzas</h1>
+			<div class="parent-grid">
+				<!-- menu grid start -->
+				<div class="grid_2-3">
+					{% for pizza in data %}
+					<div class="item-pizza">
+						<img
+							src="{{ url_for('static', filename='images/menu/pizza/' + pizza[3]) }}"
+							alt="{{ pizza[1] + 'Image'}}"
+						>
+						<p style="margin-bottom: 0">{{ pizza[1] }}</p>
+						<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
 
-					<a href="">
-						<button class="add-to-order">ADD TO ORDER</button>
-					</a>
+						<a href="">
+							<button class="add-to-order">ADD TO ORDER</button>
+						</a>
+					</div>
+					{% endfor %}
 				</div>
-				{% endfor %}
+				<!-- menu grid end -->
+				<!-- order grid start -->
+				<div style="background-color: black"></div>
+				<!-- order grid end -->
 			</div>
-			<!-- menu grid end -->
 		</main>
 	</body>
 </html>

@@ -4,6 +4,8 @@ Created by: James Park.
 Project Started on the 1st of May, 2026.
 """
 
+# NOTE: run THIS specific Python file to run the program!
+
 # imports all the Python modules used in this project
 from imports import *
 
