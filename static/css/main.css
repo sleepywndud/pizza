@@ -77,6 +77,15 @@ footer a {
 	grid-row-gap: 0px;
 }
 
+#line-divider {
+	width: 200px;
+	height: 7px;
+	background-color: var(--blue-main);
+	border-radius: 200px;
+	margin-top: -16px;
+	margin-bottom: 24px;
+}
+
 .menu-section {
 	margin: 32px;
 }

@@ -20,7 +20,8 @@
 			<div class="parent-grid">
 				<!-- menu grid start -->
 				<div class="menu-section">
-					<h1>Pizzas</h1>
+					<h2>Pizzas</h2>
+					<div id="line-divider"></div>
 					<div class="grid_2-3">
 						{% for pizza in data %}
 						<div class="item-pizza">
@@ -41,11 +42,19 @@
 				<!-- menu grid end -->
 				<!-- order grid start -->
 				<div class="order-section">
-					<p>temporary text</p>
+					<div style="padding: 35px">
+						<h2>Apply Voucher</h2>
+						<div id="line-divider"></div>
+						<form method="POST">
+							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
+							<button type="submit">Apply Voucher</button>
+						</form>
+					</div>
 				</div>
 				<!-- order grid end -->
 			</div>
 		</main>
+		<!-- footer start -->
 		<footer>
 			<div class="grid_1-1">
 				<div>
@@ -64,5 +73,6 @@
 				</div>
 			</div>
 		</footer>
+		<!-- footer end -->
 	</body>
 </html>

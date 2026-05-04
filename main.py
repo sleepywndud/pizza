@@ -14,4 +14,6 @@ from routes import *
 
 # starts the app when this python file is ran in http://127.0.0.1:2222/
 if __name__ == "__main__":
-    app.run(debug=True, port=2222)  # debug makes it so that live changes are observed
+    app.run(
+        debug=True, port=2222
+    )  # debug=True makes it so that live changes are observed
