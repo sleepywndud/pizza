@@ -151,3 +151,34 @@ footer a {
 	font-family: SN Pro;
 	font-size: 18px;
 }
+
+form[name='voucher_code'] {
+	text-align: right;
+}
+
+form input[name='voucher_code'] {
+	background-color: var(--grey-light2);
+	border: none;
+	border-radius: 100px;
+	height: 50px;
+	width: 100%;
+	font-family: SN Pro;
+	font-weight: bold;
+	font-size: large;
+	color: var(--white-main);
+	text-align: center;
+}
+
+form button[name='voucher_code'] {
+	width: 100px;
+	height: 35px;
+	border-radius: 100px;
+	border-style: none;
+	background-color: var(--blue-main);
+	color: var(--white-main);
+	font-weight: bold;
+	font-family: SN Pro;
+	font-size: 18px;
+	text-align: center;
+	margin-top: 16px;
+}

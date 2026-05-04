@@ -13,7 +13,7 @@ def main():
 
     if request.method == "POST":
         voucher_code = request.form.get("voucher_code")
-        print(f"Voucher Code Received: {voucher_code}")
+        print(f"\n\nVoucher Code Received: {voucher_code}\n\n")
 
     return render_template("index.html", data=data)
 
