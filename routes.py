@@ -2,7 +2,7 @@ from imports import *
 
 
 # route setting to index.html
-@app.route("/", methods=["POST"])
+@app.route("/", methods=["GET", "POST"])
 def main():
     global voucher_code
     conn = sqlite3.connect("database.db")
