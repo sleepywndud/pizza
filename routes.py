@@ -10,12 +10,30 @@ def main():
 
     cr.execute("SELECT * FROM pizza")
     data = cr.fetchall()
+    conn.close()
+
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM orders")
+    orders = cr.fetchall()
+    conn.close()
 
     if request.method == "POST":
         voucher_code = request.form.get("voucher_code")
         print(f"\n\nVoucher Code Received: {voucher_code}\n\n")
 
-    return render_template("index.html", data=data)
+    return render_template("index.html", data=data, orders=orders)
+
+
+@app.route("/add_to_order/<name>/<price>")
+def add_to_order(name, price):
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("INSERT INTO orders (name, price) VALUES (?, ?)", (name, price))
+    conn.commit()
+    conn.close()
+    # redirects to main function
+    return redirect(url_for("main"))
 
 
 # route setting to snacks.html

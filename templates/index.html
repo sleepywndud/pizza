@@ -30,9 +30,10 @@
 								alt="{{ pizza[1] + 'Image'}}"
 							>
 							<p style="margin-bottom: 0">{{ pizza[1] }}</p>
+							<!-- displays the "$" + the pizza's cost -->
 							<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
 
-							<a href="">
+							<a href="{{ url_for('add_to_order', name=pizza[1], price=pizza[2]) }}">
 								<button class="add-to-order">ADD TO ORDER</button>
 							</a>
 						</div>
@@ -52,7 +53,14 @@
 
 						<h2>Order Summary</h2>
 						<div id="line-divider"></div>
-						<div class="order-list"></div>
+						<div class="order-list">
+							{% for order in orders %}
+							<!-- displays everything that's in the order database -->
+							<div class="order-item">
+								<p>{{ order[1] }} - ${{ order[2] }}</p>
+							</div>
+							{% endfor %}
+						</div>
 					</div>
 				</div>
 				<!-- order grid end -->
