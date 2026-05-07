@@ -182,3 +182,13 @@ form button[name='voucher_code'] {
 	text-align: center;
 	margin-top: 16px;
 }
+
+.order-list {
+	background-color: var(--grey-light2);
+	border-radius: 25px;
+	padding: 10px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	font-weight: bold;
+}
