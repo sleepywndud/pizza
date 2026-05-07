@@ -12,6 +12,12 @@ from imports import *
 # imports all (page) routes and all the variables that is used
 from routes import *
 
+conn = sqlite3.connect("order.db")
+cr = conn.cursor()
+cr.execute("DELETE FROM orders")
+conn.commit()
+conn.close()
+
 # starts the app when this python file is ran in http://127.0.0.1:2222/
 if __name__ == "__main__":
     app.run(
