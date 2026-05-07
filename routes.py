@@ -7,7 +7,6 @@ def main():
     global voucher_code
     conn = sqlite3.connect("database.db")
     cr = conn.cursor()
-
     cr.execute("SELECT * FROM pizza")
     data = cr.fetchall()
     conn.close()
@@ -18,11 +17,20 @@ def main():
     orders = cr.fetchall()
     conn.close()
 
+    # total cost by summing price (col2 in db) using for loop
+    total_cost = 0.0
+    for order in orders:
+        total_cost += float(order[2])
+    # rounding to 2dp in case decimal place goes over 2
+    total_cost = round(total_cost, 2)
+
     if request.method == "POST":
         voucher_code = request.form.get("voucher_code")
         print(f"\n\nVoucher Code Received: {voucher_code}\n\n")
 
-    return render_template("index.html", data=data, orders=orders)
+    return render_template(
+        "index.html", data=data, orders=orders, total_cost=total_cost
+    )
 
 
 @app.route("/add_to_order/<name>/<price>")
