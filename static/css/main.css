@@ -18,8 +18,21 @@ body {
 	font-family: SN Pro;
 }
 
+/* it is recommended that all h2, come with 'line-divider' */
+h2 {
+	margin-bottom: 0;
+}
+
 .divider {
 	margin: 64px;
+}
+
+#line-divider {
+	width: 200px;
+	height: 7px;
+	background-color: var(--blue-main);
+	border-radius: 200px;
+	margin-bottom: 24px;
 }
 
 /* (navbar) https://github.com/sleepywndud/Te-Puia used */
@@ -77,15 +90,6 @@ footer a {
 	grid-row-gap: 0px;
 }
 
-#line-divider {
-	width: 200px;
-	height: 7px;
-	background-color: var(--blue-main);
-	border-radius: 200px;
-	margin-top: -16px;
-	margin-bottom: 24px;
-}
-
 .menu-section {
 	margin: 32px;
 }
@@ -96,6 +100,15 @@ footer a {
 
 /* 1 by 1 grid */
 .grid_1-1 {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 1fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px;
+}
+
+/* 2 by 1 grid */
+.grid_2-1 {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-template-rows: 1fr;

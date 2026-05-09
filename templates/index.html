@@ -59,11 +59,17 @@
 							{% for order in orders %}
 							<!-- displays the name (col1) and price (col2) of the item added to cart -->
 							<div class="order-item">
-								<p>{{ order[1] }} - ${{ order[2] }}</p>
+								<div class="grid_2-1">
+									<p>{{ order[1] }}</p>
+									<p>${{ order[2] }}</p>
+								</div>
 							</div>
 							{% endfor %}
-							<div class="divider"></div>
-							<p>Total - ${{ total_cost }}</p>
+							<div id="line-divider"></div>
+							<div class="grid_2-1">
+								<p>Total</p>
+								<p>${{ total_cost }}</p>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -14,6 +14,7 @@ from routes import *
 
 conn = sqlite3.connect("order.db")
 cr = conn.cursor()
+# empties the database data in order.db when program is ran
 cr.execute("DELETE FROM orders")
 conn.commit()
 conn.close()
