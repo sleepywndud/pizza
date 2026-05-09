@@ -3,28 +3,38 @@
 Created by James Juyoung Park.\
 Project started on: 1st of May, 2026.
 
-**DUE: 14th of August, 2026.**
-
-This program is for the following standards:
-- 91896 (Python)
-- 91897 (Documentation)
-- 91892 (Database)
-- 91893 (Website)
-
 ---
 
-AUTHENTICITY:
+> # USER MANUAL: 
 
-1. All work submitted are original work(s) of James Juyoung Park.
-2. Any sources of information used/any help received from AI and/or other people will be stated in the Google Doc.
-3. Students taking the same Software Development course with me in 2026 MUST abide by `LICENSE.md` when using/viewing this repository.
+Welcome to the program!\
+Using this program, you can order some pizza!
 
----
+> ### PREREQUISITES:
 
-SOFTWARE USED:
-- Visual Studio Code
-- Github Desktop
-- Figma
-- Lucidchart
-- SQLite Studio
-- Trello
+Before you run this program, please ensure that you have the latest [Python](https://www.python.org/downloads/) version, and the modules that are used in this program.
+
+The modules that are used in this program are the following:
+- `flask`
+- `sqlite3`
+
+You can download all the modules used in this program by running the following:
+```python
+pip install -r requirements.txt
+```
+
+> ### RUNNING THE PROGRAM:
+
+To run the program, please run the `main.py` file. If you see an output that says something to do with Flask, then the program is active.
+
+Once the program is active, visit http://127.0.0.1:2222/, and you should see the program.
+
+> ### OTHERS:
+- You do not need a credit/card or an account for this program! Simply place your order, and pay & collect at the store!
+- There are coupons you can use to get discounts off your order! Here are the following coupons that are available to use:
+    - HELLOWORLD
+    - FREEPIZZA
+
+> ### HELP:
+
+If you require any assistance, or would like to report a bug/issue, please email `parkj2@stu.otc.school.nz`!
