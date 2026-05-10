@@ -30,7 +30,7 @@ To run the program, please run the `main.py` file. If you see an output that say
 Once the program is active, visit http://127.0.0.1:2222/, and you should see the program.
 
 > ### OTHERS:
-- You do not need a credit/card or an account for this program! Simply place your order, and pay & collect at the store!
+- You do not need a credit card or an account for this program! Simply place your order, and pay & collect at the store!
 - There are coupons you can use to get discounts off your order! Here are the following coupons that are available to use:
     - `HELLOWORLD`
     - `FREEPIZZA`
