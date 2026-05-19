@@ -57,18 +57,21 @@
 						<div class="order-list">
 							<!-- uses a for loop to print everything that's in the db -->
 							{% for order in orders %}
-							<!-- displays the name (col1) and price (col2) of the item added to cart -->
+							<!-- displays the name (col1), price (col2), and quantity (col3) of the item added to cart -->
 							<div class="order-item">
 								<div class="grid_2-1">
-									<p>{{ order[1] }}</p>
-									<p>${{ order[2] }}</p>
+									<p>{{ order[3] }}x {{ order[1] }}</p>
+									<!-- <p style="text-align: right">${{ order[2]*order[3] }}</p> -->
+									<p style="text-align: right">
+										<!-- formats the price like 'quantity * price', and rounds to 2dp -->
+										${{ "%.2f"|format(order[2]|float * order[3]|int) }}
+									</p>
 								</div>
 							</div>
 							{% endfor %}
-							<div id="line-divider"></div>
 							<div class="grid_2-1">
 								<p>Total</p>
-								<p>${{ total_cost }}</p>
+								<p style="text-align: right">${{ total_cost }}</p>
 							</div>
 						</div>
 					</div>

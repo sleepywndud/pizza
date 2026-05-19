@@ -17,10 +17,10 @@ def main():
     orders = cr.fetchall()
     conn.close()
 
-    # total cost by summing price (col2 in db) using for loop
+    # total cost by summing (price * quantity) using for loop
     total_cost = 0.0
     for order in orders:
-        total_cost += float(order[2])
+        total_cost += float(order[2]) * int(order[3])
     # rounding to 2dp in case decimal place goes over 2
     total_cost = round(total_cost, 2)
 
@@ -37,10 +37,26 @@ def main():
 def add_to_order(name, price):
     conn = sqlite3.connect("order.db")
     cr = conn.cursor()
-    cr.execute("INSERT INTO orders (name, price) VALUES (?, ?)", (name, price))
+    # checks if item is in order.db
+    cr.execute(
+        "SELECT quantity FROM orders WHERE name = ?", (name,)
+    )  # need to pass a tuple so that it works
+    item = cr.fetchone()
+
+    if item:
+        # if item exists, increase the quantity by one
+        new_quantity = item[0] + 1
+        cr.execute(
+            "UPDATE orders SET quantity = ? WHERE name = ?", (new_quantity, name)
+        )
+    else:
+        # if item doesn't exist, then add the row to the db, with quantity 1
+        cr.execute(
+            "INSERT INTO orders (name, price, quantity) VALUES (?, ?, 1)", (name, price)
+        )
+
     conn.commit()
     conn.close()
-    # redirects to main function
     return redirect(url_for("main"))
 
 
