@@ -61,7 +61,22 @@
 							<div class="order-item">
 								<div class="grid_3-1">
 									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
-									<p>{{ order[3] }}x</p>
+									<div style="text-align: left">
+										<form
+											action="{{ url_for('update_quantity', item_id=order[0]) }}"
+											method="POST"
+										>
+											<!-- uses form to pass numberinput value to the db -->
+											<input
+												type="number"
+												name="quantity"
+												class="quantitymodify"
+												value="{{ order[3] }}"
+												min="0"
+												onchange="this.form.submit()"
+											>
+										</form>
+									</div>
 									<p style="text-align: center">{{ order[1] }}</p>
 									<p style="text-align: right">
 										<!-- formats the price like 'quantity * price', and rounds to 2dp -->

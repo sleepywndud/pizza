@@ -213,3 +213,8 @@ form button[name='voucher_code'] {
 	flex-direction: column;
 	font-weight: bold;
 }
+
+input[type='number'] {
+	margin-top: 15px;
+	width: 70%;
+}

@@ -33,6 +33,28 @@ def main():
     )
 
 
+@app.route("/update_quantity/<item_id>", methods=["POST"])
+def update_quantity(item_id):
+    # fetch quantity from the form in index.html
+    new_quantity = int(request.form.get("quantity"))
+
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+
+    if new_quantity > 0:
+        # update quantity in the database to the corresponding itemid
+        cr.execute(
+            "UPDATE orders SET quantity = ? WHERE id = ?", (new_quantity, item_id)
+        )
+    else:
+        # remove item if quantity is zero
+        cr.execute("DELETE FROM orders WHERE id = ?", (item_id,))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for("main"))
+
+
 @app.route("/add_to_order/<name>/<price>")
 def add_to_order(name, price):
     conn = sqlite3.connect("order.db")
