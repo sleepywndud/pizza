@@ -6,8 +6,6 @@ Project Started on the 1st of May, 2026.
 
 # NOTE: run THIS specific Python file to run the program!
 
-import sqlite3
-from flask import Flask
 from imports import *
 from routes import *
 

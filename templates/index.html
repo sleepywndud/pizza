@@ -59,9 +59,10 @@
 							{% for order in orders %}
 							<!-- displays the name (col1), price (col2), and quantity (col3) of the item added to cart -->
 							<div class="order-item">
-								<div class="grid_2-1">
-									<p>{{ order[3] }}x {{ order[1] }}</p>
-									<!-- <p style="text-align: right">${{ order[2]*order[3] }}</p> -->
+								<div class="grid_3-1">
+									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
+									<p>{{ order[3] }}x</p>
+									<p style="text-align: center">{{ order[1] }}</p>
 									<p style="text-align: right">
 										<!-- formats the price like 'quantity * price', and rounds to 2dp -->
 										${{ "%.2f"|format(order[2]|float * order[3]|int) }}

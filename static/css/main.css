@@ -124,6 +124,14 @@ footer a {
 	gap: 20px;
 }
 
+/* 3 by 1 grid */
+.grid_3-1 {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(1, 1fr);
+	gap: 0px;
+}
+
 .item-pizza {
 	width: 100%;
 	background-color: var(--grey-light1);
