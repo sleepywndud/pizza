@@ -36,6 +36,7 @@ def main():
 @app.route("/update_quantity/<item_id>", methods=["POST"])
 def update_quantity(item_id):
     # fetch quantity from the form in index.html
+    # NOTE: ADD VALUE-TYPE CHECKING
     new_quantity = int(request.form.get("quantity"))
 
     conn = sqlite3.connect("order.db")
