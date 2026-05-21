@@ -86,7 +86,27 @@ def add_to_order(name, price):
 # route setting to snacks.html
 @app.route("/snacks")
 def snacks():
-    return render_template("snacks.html")
+    global orders
+    conn = sqlite3.connect("database.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM pizza")
+    data = cr.fetchall()
+    conn.close()
+
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM orders")
+    orders = cr.fetchall()
+    conn.close()
+
+    # total cost by summing (price * quantity) using for loop
+    total_cost = 0.0
+    for order in orders:
+        total_cost += float(order[2]) * int(order[3])
+    # rounding to 2dp in case decimal place goes over 2
+    total_cost = round(total_cost, 2)
+
+    return render_template("snacks.html", orders=orders, total_cost=total_cost)
 
 
 # route setting to drinks.html

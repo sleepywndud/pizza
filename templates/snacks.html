@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 	</head>
 	<body>
+		<!-- header (navbar) start -->
 		<header>
 			<nav class="navbar">
 				<a href="{{ url_for('main') }}">PIZZAS</a>
@@ -14,10 +15,72 @@
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
 			</nav>
 		</header>
-		<div class="divider"></div>
+		<!-- header (navbar) end -->
 		<main>
-			<h1>snacks.html</h1>
+			<div class="parent-grid">
+				<!-- menu grid start -->
+				<div class="menu-section">
+					<h2>Snacks</h2>
+					<div id="line-divider"></div>
+					<div class="grid_2-3">
+						<!-- ADD SNACKS ORDER HERE!!!!! -->
+					</div>
+				</div>
+				<!-- menu grid end -->
+				<!-- order grid start -->
+				<div class="order-section">
+					<div style="padding: 35px">
+						<h2>Apply Voucher</h2>
+						<div id="line-divider"></div>
+						<form method="POST" name="voucher_code">
+							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
+							<button type="submit" name="voucher_code">SUBMIT</button>
+						</form>
+
+						<h2>Order Summary</h2>
+						<div id="line-divider"></div>
+						<div class="order-list">
+							<!-- uses a for loop to print everything that's in the db -->
+							{% for order in orders %}
+							<!-- displays the name (col1), price (col2), and quantity (col3) of the item added to cart -->
+							<div class="order-item">
+								<div class="grid_3-1">
+									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
+									<div style="text-align: left">
+										<form
+											action="{{ url_for('update_quantity', item_id=order[0]) }}"
+											method="POST"
+										>
+											<!-- uses form to pass numberinput value to the db -->
+											<input
+												type="number"
+												name="quantity"
+												class="quantitymodify"
+												value="{{ order[3] }}"
+												min="0"
+												onchange="this.form.submit()"
+											>
+										</form>
+									</div>
+									<p style="text-align: center">{{ order[1] }}</p>
+									<p style="text-align: right">
+										<!-- formats the price like 'quantity * price', and rounds to 2dp -->
+										${{ "%.2f"|format(order[2]|float * order[3]|int) }}
+									</p>
+								</div>
+							</div>
+							{% endfor %}
+							<div class="grid_2-1">
+								<p>Total</p>
+								<p style="text-align: right">${{ total_cost }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- order grid end -->
+			</div>
 		</main>
+		<!-- footer start -->
 		<footer>
 			<div class="grid_1-1">
 				<div>
@@ -36,5 +99,6 @@
 				</div>
 			</div>
 		</footer>
+		<!-- footer end -->
 	</body>
 </html>
