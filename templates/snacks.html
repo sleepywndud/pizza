@@ -23,7 +23,22 @@
 					<h2>Snacks</h2>
 					<div id="line-divider"></div>
 					<div class="grid_2-3">
-						<!-- ADD SNACKS ORDER HERE!!!!! -->
+						<!-- uses for loop to print however many items that are on the db -->
+						{% for snack in data %}
+						<div class="item-pizza">
+							<img
+								src="{{ url_for('static', filename='images/menu/snacks/' + snack[3]) }}"
+								alt="{{ snack[1] + ' Image'}}"
+							>
+							<p style="margin-bottom: 0">{{ snack[1] }}</p>
+							<!-- displays the "$" + the snack's cost -->
+							<p style="margin-top: 0">{{ '$' + snack[2] }}</p>
+
+							<a href="{{ url_for('add_to_order', name=snack[1]) }}">
+								<button class="add-to-order">ADD TO ORDER</button>
+							</a>
+						</div>
+						{% endfor %}
 					</div>
 				</div>
 				<!-- menu grid end -->
