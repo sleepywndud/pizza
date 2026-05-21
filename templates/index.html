@@ -34,7 +34,7 @@
 							<!-- displays the "$" + the pizza's cost -->
 							<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
 
-							<a href="{{ url_for('add_to_order', name=pizza[1], price=pizza[2]) }}">
+							<a href="{{ url_for('add_to_order', name=pizza[1]) }}">
 								<button class="add-to-order">ADD TO ORDER</button>
 							</a>
 						</div>
