@@ -13,7 +13,7 @@ def main():
 
     conn = sqlite3.connect("order.db")
     cr = conn.cursor()
-    cr.execute("SELECT * FROM orders")
+    cr.execute("SELECT * FROM cart")
     orders = cr.fetchall()
     conn.close()
 
@@ -44,16 +44,14 @@ def update_quantity(item_id):
 
     if new_quantity > 0:
         # update quantity in the database to the corresponding itemid
-        cr.execute(
-            "UPDATE orders SET quantity = ? WHERE id = ?", (new_quantity, item_id)
-        )
+        cr.execute("UPDATE cart SET quantity = ? WHERE id = ?", (new_quantity, item_id))
     else:
         # remove item if quantity is zero
-        cr.execute("DELETE FROM orders WHERE id = ?", (item_id,))
+        cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
 
     conn.commit()
     conn.close()
-    return redirect(url_for("main"))
+    return redirect(request.referrer or url_for("main"))
 
 
 @app.route("/add_to_order/<name>")
@@ -74,34 +72,33 @@ def add_to_order(name):
 
     conn.close()
 
-    # updates quantity in order table if item is in menu
+    # updates quantity in cart table if item is in menu
     if item_data is not None:
-        price = item_data[0]
-        print(f"\n {price} \n")
+        price = item_data[0]  # price
 
         conn = sqlite3.connect("order.db")
         cr = conn.cursor()
         # checks if item is already in order.db
-        cr.execute("SELECT quantity FROM orders WHERE name = ?", (name,))
+        cr.execute("SELECT quantity FROM cart WHERE name = ?", (name,))
         item = cr.fetchone()
 
         if item is not None:
             # if item exists, increase the quantity by one
             new_quantity = item[0] + 1
             cr.execute(
-                "UPDATE orders SET quantity = ? WHERE name = ?", (new_quantity, name)
+                "UPDATE cart SET quantity = ? WHERE name = ?", (new_quantity, name)
             )
         else:
             # if item doesn't exist, then add the row to the db with quantity 1
             cr.execute(
-                "INSERT INTO orders (name, price, quantity) VALUES (?, ?, 1)",
+                "INSERT INTO cart (name, price, quantity) VALUES (?, ?, 1)",
                 (name, price),
             )
 
         conn.commit()
         conn.close()
 
-    return redirect(url_for("main"))
+    return redirect(request.referrer or url_for("main"))
 
 
 # route setting to snacks.html
@@ -115,7 +112,7 @@ def snacks():
 
     conn = sqlite3.connect("order.db")
     cr = conn.cursor()
-    cr.execute("SELECT * FROM orders")
+    cr.execute("SELECT * FROM cart")
     orders = cr.fetchall()
     conn.close()
 
