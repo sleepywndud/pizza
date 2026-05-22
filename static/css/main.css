@@ -98,15 +98,6 @@ footer a {
 	background-color: var(--grey-light1);
 }
 
-/* 1 by 1 grid */
-.grid_1-1 {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	grid-template-rows: 1fr;
-	grid-column-gap: 0px;
-	grid-row-gap: 0px;
-}
-
 /* 2 by 1 grid */
 .grid_2-1 {
 	display: grid;
