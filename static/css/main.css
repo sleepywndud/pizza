@@ -4,11 +4,11 @@
 }
 
 :root {
-	--white-main: #f6f7fa;
-	--blue-main: #0145f2;
-	--grey-light1: #edf1f5;
-	--grey-light2: #d3dae2;
-	--grey-dark: #303437;
+	--white-main: #faf6f6;
+	--accent-main: #ff3636;
+	--grey-light1: #f5eded;
+	--grey-light2: #e2d3d3;
+	--grey-dark: #373030;
 }
 
 body {
@@ -30,7 +30,7 @@ h2 {
 #line-divider {
 	width: 200px;
 	height: 7px;
-	background-color: var(--blue-main);
+	background-color: var(--accent-main);
 	border-radius: 200px;
 	margin-bottom: 24px;
 }
@@ -44,7 +44,7 @@ h2 {
 	left: 0;
 
 	width: 100%;
-	background-color: var(--blue-main);
+	background-color: var(--accent-main);
 	opacity: 100%;
 	display: flex;
 	align-items: center;
@@ -70,7 +70,7 @@ h2 {
 }
 
 footer {
-	background: var(--blue-main);
+	background: var(--accent-main);
 	margin: 0;
 	padding: 20px;
 	color: var(--white-main);
@@ -157,7 +157,7 @@ footer a {
 	height: 35px;
 	border-radius: 100px;
 	border-style: none;
-	background-color: var(--blue-main);
+	background-color: var(--accent-main);
 	color: var(--white-main);
 	font-weight: bold;
 	font-family: SN Pro;
@@ -186,7 +186,7 @@ form button[name='voucher_code'] {
 	height: 35px;
 	border-radius: 100px;
 	border-style: none;
-	background-color: var(--blue-main);
+	background-color: var(--accent-main);
 	color: var(--white-main);
 	font-weight: bold;
 	font-family: SN Pro;
