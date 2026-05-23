@@ -1,11 +1,19 @@
-> 2026 Level 2 Software Development Internal Project
+This is a project for the Level 2 Software Development Internal Project.\
+This program is for attempting the following standards:
+- 91896: Advanced Programming Techniques (Python)
+- 91897: Advanced Processes (Documentation)
+- 91892: Advanced Techniques - Database (SQL)
+- 91893: Advanced Techniques - Media Outcome (HTML & CSS)
 
 Created by James Juyoung Park.\
-Project started on: 1st of May, 2026.
+Project started on: 1st of May, 2026.\
+Project Due: 14th of August, 2026.
+
+> Please note that both [wndx2](https://github.com/wndx2), AND [sleepywndud](https://github.com/sleepywndud) are accounts owned by James Juyoung Park. If some commits are mis-attributed to one or the either account, I apologize in advance.
 
 ---
 
-> # USER MANUAL: 
+> ## USER MANUAL: 
 
 Welcome to the program!\
 Using this program, you can order some pizza!
@@ -25,11 +33,14 @@ pip install -r requirements.txt
 
 > ### RUNNING THE PROGRAM:
 
-To run the program, please run the `main.py` file. If you see an output that says something to do with Flask, then the program is active.
+To run the program, please run the `main.py` file. If you see an output that says something like:
+```
+ * Serving Flask app 'imports'
+ * Debug mode: on
+```
+Then the program is active. Now visit http://127.0.0.1:2222/ and you should see the program.
 
-Once the program is active, visit http://127.0.0.1:2222/, and you should see the program.
-
-> ### OTHERS:
+> ### OTHER INFORMATION:
 - You do not need a credit/card or an account for this program! Simply place your order, and pay & collect at the store!
 - There are coupons you can use to get discounts off your order! Here are the following coupons that are available to use:
     - `HELLOWORLD`
