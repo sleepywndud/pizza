@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 	</head>
 	<body>
+		<!-- header (navbar) start -->
 		<header>
 			<nav class="navbar">
 				<a href="{{ url_for('main') }}">PIZZAS</a>
@@ -14,12 +15,20 @@
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
 			</nav>
 		</header>
-		<div class="divider"></div>
+		<!-- header (navbar) end -->
 		<main>
 			<h1>customize.html</h1>
 		</main>
+		<!-- footer start -->
 		<footer>
-			<div class="grid_2-1">
+			<div class="grid_3-1">
+				<div style="text-align: center">
+					<img
+						src="{{ url_for('static', filename='images/logo.png') }}"
+						alt="logo"
+						width="50%"
+					>
+				</div>
 				<div>
 					<p>Copyright (c) 2026 James (Juyoung) Park.<br>All rights reserved.</p>
 
@@ -36,5 +45,6 @@
 				</div>
 			</div>
 		</footer>
+		<!-- footer end -->
 	</body>
 </html>
