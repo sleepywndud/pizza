@@ -75,7 +75,10 @@ def add_to_order(name):
         cr.execute("SELECT price FROM snack WHERE name = ?", (name,))
         item_data = cr.fetchone()  # set item_data as the price of the item
 
-    # NOTE: add other checks as well once other pages are added
+    # if not in snack, check drinks table
+    if item_data is None:
+        cr.execute("SELECT price FROM drinks WHERE name = ?", (name,))
+        item_data = cr.fetchone()
 
     conn.close()
 
@@ -138,7 +141,28 @@ def snacks():
 # route setting to drinks.html
 @app.route("/drinks")
 def drinks():
-    return render_template("drinks.html")
+    conn = sqlite3.connect("database.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM drinks")
+    data = cr.fetchall()
+    conn.close()
+
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM cart")
+    orders = cr.fetchall()
+    conn.close()
+
+    # total cost by summing (price * quantity) using for loop
+    total_cost = 0.0
+    for order in orders:
+        total_cost += float(order[2]) * int(order[3])
+    # rounding to 2dp in case decimal place goes over 2
+    total_cost = round(total_cost, 2)
+
+    return render_template(
+        "drinks.html", data=data, orders=orders, total_cost=total_cost
+    )
 
 
 # route setting to custmoize.html
