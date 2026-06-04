@@ -33,21 +33,28 @@ def main():
     )
 
 
-@app.route("/update_quantity/<item_id>", methods=["POST"])
+@app.route("/update_quantity/<int:item_id>", methods=["POST"])
 def update_quantity(item_id):
     # fetch quantity from the form in index.html
-    # NOTE: ADD VALUE-TYPE CHECKING
-    new_quantity = int(request.form.get("quantity"))
+    try:
+        new_quantity = int(request.form.get("quantity"))
+    except (ValueError, TypeError):
+        # redirect back if input is invalid (for valueerror and typeerror)
+        # maybe alert user somehow if invalid input ???
+
+        # right now it basically returns to the state before the invalid input
+        return redirect(request.referrer or url_for("main"))
 
     conn = sqlite3.connect("order.db")
     cr = conn.cursor()
 
-    if new_quantity > 0:
+    if 0 < new_quantity <= 100:
         # update quantity in the database to the corresponding itemid
         cr.execute("UPDATE cart SET quantity = ? WHERE id = ?", (new_quantity, item_id))
-    else:
+    elif new_quantity == 0:
         # remove item if quantity is zero
         cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
+    # if quantity is negative or too high, we just don't update anything
 
     conn.commit()
     conn.close()

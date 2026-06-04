@@ -17,4 +17,5 @@ conn.commit()
 conn.close()
 
 if __name__ == "__main__":
+    print(Fore.GREEN + "[+] Program reloaded!" + Fore.RESET)
     app.run(debug=True, port=2222)
