@@ -54,6 +54,7 @@
 
 						<h2>Order Summary</h2>
 						<div id="line-divider"></div>
+						<!-- order box start -->
 						<div class="order-list">
 							<!-- uses a for loop to print everything that's in the db -->
 							{% for order in orders %}
@@ -90,6 +91,14 @@
 								<p style="text-align: right">${{ total_cost }}</p>
 							</div>
 						</div>
+						<!-- order box end -->
+						<p>
+							* Maximum amount of pizzas you can order online is 100. If you wish to
+							order more, please call the store.
+						</p>
+						<form method="POST" name="checkout">
+							<button type="submit" name="checkout">CHECKOUT</button>
+						</form>
 					</div>
 				</div>
 				<!-- order grid end -->

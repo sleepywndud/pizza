@@ -38,7 +38,7 @@ def update_quantity(item_id):
     # fetch quantity from the form in index.html
     try:
         new_quantity = int(request.form.get("quantity"))
-    except (ValueError, TypeError):
+    except ValueError:
         # redirect back if input is invalid (for valueerror and typeerror)
         # maybe alert user somehow if invalid input ???
 

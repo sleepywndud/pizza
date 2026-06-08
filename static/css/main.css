@@ -4,11 +4,11 @@
 }
 
 :root {
-	--white-main: #faf6f6;
-	--accent-main: #ff3636;
-	--grey-light1: #f5eded;
-	--grey-light2: #e2d3d3;
-	--grey-dark: #373030;
+	--white-main: #f6f7fa;
+	--accent-main: #0145f2;
+	--grey-light1: #edf1f5;
+	--grey-light2: #d3dae2;
+	--grey-dark: #303437;
 }
 
 body {
@@ -208,4 +208,35 @@ form button[name='voucher_code'] {
 input[type='number'] {
 	margin-top: 15px;
 	width: 70%;
+}
+
+form[name='checkout'] {
+	text-align: right;
+}
+
+form input[name='checkout'] {
+	background-color: var(--grey-light2);
+	border: none;
+	border-radius: 100px;
+	height: 50px;
+	width: 100%;
+	font-family: SN Pro;
+	font-weight: bold;
+	font-size: large;
+	color: var(--white-main);
+	text-align: center;
+}
+
+form button[name='checkout'] {
+	width: 120px;
+	height: 35px;
+	border-radius: 100px;
+	border-style: none;
+	background-color: var(--accent-main);
+	color: var(--white-main);
+	font-weight: bold;
+	font-family: SN Pro;
+	font-size: 18px;
+	text-align: center;
+	margin-top: 16px;
 }
