@@ -5,17 +5,9 @@ from imports import *
 @app.route("/", methods=["GET", "POST"])
 def main():
     global voucher_code
-    conn = sqlite3.connect("database.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM pizza")
-    data = cr.fetchall()
-    conn.close()
+    data = menu_connect()
 
-    conn = sqlite3.connect("order.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM cart")
-    orders = cr.fetchall()
-    conn.close()
+    orders = order_connect()
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0

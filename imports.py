@@ -11,3 +11,24 @@ log = logging.getLogger("werkzeug")
 log.disabled = True
 
 app = Flask(__name__)
+
+
+# database connecting functions
+def menu_connect():
+    conn = sqlite3.connect("database.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM pizza")
+    data = cr.fetchall()
+    conn.close()
+
+    return data
+
+
+def order_connect():
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM cart")
+    orders = cr.fetchall()
+    conn.close()
+
+    return orders
