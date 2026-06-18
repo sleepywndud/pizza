@@ -135,7 +135,7 @@ def snacks():
 def drinks():
     conn = sqlite3.connect("database.db")
     cr = conn.cursor()
-    cr.execute("SELECT * FROM drinks")
+    cr.execute("SELECT * FROM drinks")  # CHANGE VAR TO SINGULAR
     data = cr.fetchall()
     conn.close()
 
@@ -160,4 +160,25 @@ def drinks():
 # route setting to custmoize.html
 @app.route("/customize")
 def customize():
-    return render_template("customize.html")
+    conn = sqlite3.connect("database.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM ingredient")
+    data = cr.fetchall()
+    conn.close()
+
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM cart")
+    orders = cr.fetchall()
+    conn.close()
+
+    # total cost by summing (price * quantity) using for loop
+    total_cost = 0.0
+    for order in orders:
+        total_cost += float(order[2]) * int(order[3])
+    # rounding to 2dp in case decimal place goes over 2
+    total_cost = round(total_cost, 2)
+
+    return render_template(
+        "customize.html", data=data, orders=orders, total_cost=total_cost
+    )
