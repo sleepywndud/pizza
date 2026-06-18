@@ -18,16 +18,101 @@
 		<!-- header (navbar) end -->
 		<main>
 			<div class="parent-grid">
+				<!-- menu grid start -->
 				<div class="menu-section">
 					<h2>Customize Pizza</h2>
 					<div id="line-divider"></div>
-					<!-- NOTE: add grid here -->
+					<div class="grid_3-1_1to3ratio">
+						<!-- ingredient selection section -->
+						<div>
+							<div class="grid_1-2_1to3ratio">
+								{% for ingredient in data %}
+								<!-- NOTE: class for item-ingredient may not be defined in css -->
+								<div class="item-ingredient">
+									<b style="margin-bottom: 0">{{ ingredient[1] }}</b>
+									<!-- displays the "$" + the ingredient's cost -->
+									<p style="margin-top: 0">{{"+ " '$' + ingredient[2] }}</p>
+								</div>
+								<a href="{{ url_for('add_to_order', name=ingredient[1]) }}">
+									<button class="add-ingredient-to-order">+</button>
+								</a>
+								{% endfor %}
+							</div>
+						</div>
+						<!-- ingredient selection section end -->
+						<!-- pizza preview section -->
+						<div>
+							<p>Preview Pizza</p>
+						</div>
+						<!-- pizza preview section end -->
+					</div>
 				</div>
+				<!-- menu grid end -->
+				<!-- order grid start -->
+				<div class="order-section">
+					<div style="padding: 35px">
+						<h2>Apply Voucher</h2>
+						<div id="line-divider"></div>
+						<form method="POST" name="voucher_code">
+							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
+							<button type="submit" name="voucher_code">SUBMIT</button>
+						</form>
+
+						<h2>Order Summary</h2>
+						<div id="line-divider"></div>
+						<!-- order box start -->
+						<div class="order-list">
+							<!-- uses a for loop to print everything that's in the db -->
+							{% for order in orders %}
+							<!-- displays the name (col1), price (col2), and quantity (col3) of the item added to cart -->
+							<div class="order-item">
+								<div class="grid_3-1_1to1ratio">
+									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
+									<div style="text-align: left">
+										<form
+											action="{{ url_for('update_quantity', item_id=order[0]) }}"
+											method="POST"
+										>
+											<!-- uses form to pass numberinput value to the db -->
+											<input
+												type="number"
+												name="quantity"
+												class="quantitymodify"
+												value="{{ order[3] }}"
+												min="0"
+												onchange="this.form.submit()"
+											>
+										</form>
+									</div>
+									<p style="text-align: center">{{ order[1] }}</p>
+									<p style="text-align: right">
+										<!-- formats the price like 'quantity * price', and rounds to 2dp -->
+										${{ "%.2f"|format(order[2]|float * order[3]|int) }}
+									</p>
+								</div>
+							</div>
+							{% endfor %}
+							<div class="grid_2-1">
+								<p>Total</p>
+								<p style="text-align: right">${{ total_cost }}</p>
+							</div>
+						</div>
+						<!-- order box end -->
+						<p>
+							* Maximum amount of pizzas you can order online is 100. If you wish to
+							order more, please call the store.
+						</p>
+						<form method="POST" name="checkout">
+							<button type="submit" name="checkout">CHECKOUT</button>
+						</form>
+					</div>
+				</div>
+				<!-- order grid end -->
 			</div>
 		</main>
 		<!-- footer start -->
 		<footer>
-			<div class="grid_3-1">
+			<div class="grid_3-1_1to1ratio">
 				<div style="text-align: center">
 					<img
 						src="{{ url_for('static', filename='images/logo.png') }}"
