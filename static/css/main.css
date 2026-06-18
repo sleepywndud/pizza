@@ -37,15 +37,11 @@ h2 {
 
 /* (navbar) https://github.com/sleepywndud/Te-Puia used */
 .navbar {
-	/* ensures the navbar is on top of other elements */
+	/* ensures the navbar is on top of other elements by putting a massive number */
 	z-index: 999999999999;
-
-	top: 0;
-	left: 0;
 
 	width: 100%;
 	background-color: var(--accent-main);
-	opacity: 100%;
 	display: flex;
 	align-items: center;
 	padding: 1.4rem;
@@ -203,6 +199,9 @@ form button[name='voucher_code'] {
 	display: flex;
 	flex-direction: column;
 	font-weight: bold;
+	overflow-x: hidden;
+	overflow-y: auto;
+	height: 36rem;
 }
 
 input[type='number'] {
