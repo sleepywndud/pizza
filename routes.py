@@ -144,7 +144,7 @@ def drinks():
 # route setting to custmoize.html
 @app.route("/customize")
 def customize():
-    data = menu_connect()
+    data = menu_connect("ingredient")
 
     orders = order_connect()
 
