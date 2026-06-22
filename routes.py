@@ -106,17 +106,9 @@ def add_to_order(name):
 # route setting to snacks.html
 @app.route("/snacks")
 def snacks():
-    conn = sqlite3.connect("database.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM snack")
-    data = cr.fetchall()
-    conn.close()
+    data = menu_connect("snack")
 
-    conn = sqlite3.connect("order.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM cart")
-    orders = cr.fetchall()
-    conn.close()
+    orders = order_connect()
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0
@@ -133,17 +125,9 @@ def snacks():
 # route setting to drinks.html
 @app.route("/drinks")
 def drinks():
-    conn = sqlite3.connect("database.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM drinks")  # CHANGE VAR TO SINGULAR
-    data = cr.fetchall()
-    conn.close()
+    data = menu_connect("drinks")
 
-    conn = sqlite3.connect("order.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM cart")
-    orders = cr.fetchall()
-    conn.close()
+    orders = order_connect()
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0
@@ -160,17 +144,9 @@ def drinks():
 # route setting to custmoize.html
 @app.route("/customize")
 def customize():
-    conn = sqlite3.connect("database.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM ingredient")
-    data = cr.fetchall()
-    conn.close()
+    data = menu_connect()
 
-    conn = sqlite3.connect("order.db")
-    cr = conn.cursor()
-    cr.execute("SELECT * FROM cart")
-    orders = cr.fetchall()
-    conn.close()
+    orders = order_connect()
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0

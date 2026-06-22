@@ -14,10 +14,10 @@ app = Flask(__name__)
 
 
 # database connecting functions
-def menu_connect():
+def menu_connect(table="pizza"):
     conn = sqlite3.connect("database.db")
     cr = conn.cursor()
-    cr.execute("SELECT * FROM pizza")
+    cr.execute(f"SELECT * FROM {table}")
     data = cr.fetchall()
     conn.close()
 
