@@ -13,6 +13,7 @@ conn = sqlite3.connect("order.db")
 cr = conn.cursor()
 # empties the database data in order.db when program is ran
 cr.execute("DELETE FROM cart")
+cr.execute("DELETE FROM custom_pizza_draft")
 conn.commit()
 conn.close()
 

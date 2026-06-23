@@ -32,3 +32,13 @@ def order_connect():
     conn.close()
 
     return orders
+
+
+def draft_connect():
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    cr.execute("SELECT * FROM custom_pizza_draft")
+    draft = cr.fetchall()
+    conn.close()
+
+    return draft
