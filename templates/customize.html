@@ -25,24 +25,50 @@
 					<div class="grid_3-1_1to3ratio">
 						<!-- ingredient selection section -->
 						<div>
-							<div class="grid_1-2_1to3ratio">
+							<div class="ingredient-list">
 								{% for ingredient in data %}
-								<!-- NOTE: class for item-ingredient may not be defined in css -->
-								<div class="item-ingredient">
-									<b style="margin-bottom: 0">{{ ingredient[1] }}</b>
-									<!-- displays the "$" + the ingredient's cost -->
-									<p style="margin-top: 0">{{"+ " '$' + ingredient[2] }}</p>
+								<div class="ingredient-box item-ingredient">
+									<div>
+										<b style="margin-bottom: 0">{{ ingredient[1] }}</b>
+										<p style="margin-top: 0">{{"+ " '$' + ingredient[2] }}</p>
+									</div>
+									<a href="{{ url_for('ingredient', name=ingredient[1]) }}">
+										<button class="add-ingredient-to-order">+</button>
+									</a>
 								</div>
-								<a href="{{ url_for('add_to_order', name=ingredient[1]) }}">
-									<button class="add-ingredient-to-order">+</button>
-								</a>
 								{% endfor %}
 							</div>
 						</div>
 						<!-- ingredient selection section end -->
 						<!-- pizza preview section -->
-						<div>
-							<p>Preview Pizza</p>
+						<div style="margin-left: 32px">
+							<h2>Preview</h2>
+							<div id="line-divider"></div>
+							<div class="preview-box">
+								<div class="preview-item">
+									<span class="draft-base-line">Base Dough</span>
+									<span></span>
+									<span class="draft-base-line">$5.00</span>
+								</div>
+								{% for item in draft %}
+								<div class="preview-item">
+									<span>{{ item[1] }}</span>
+									<span></span>
+									<span>${{ item[2] }}</span>
+									<a href="{{ url_for('remove_ingredient', item_id=item[0]) }}" class="draft-remove-btn">×</a>
+								</div>
+								{% endfor %}
+								<div class="preview-item" style="margin-top: 8px; border-top: 1px solid #ccc; padding-top: 8px">
+									<span><b>Total</b></span>
+									<span></span>
+									<span><b>${{ draft_total }}</b></span>
+								</div>
+							</div>
+							{% if draft %}
+							<a href="{{ url_for('add_custom_to_cart') }}">
+								<button class="add-to-order" style="margin-top: 16px; width: 100%">Add to Cart</button>
+							</a>
+							{% endif %}
 						</div>
 						<!-- pizza preview section end -->
 					</div>

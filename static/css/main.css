@@ -138,7 +138,7 @@ footer a {
 	grid-template-rows: 1fr;
 	grid-column-gap: 0px;
 	grid-row-gap: 0px;
-	align-items: center;
+	align-items: start;
 }
 
 .item-pizza {
@@ -229,6 +229,39 @@ form button[name='voucher_code'] {
 	margin-top: 16px;
 }
 
+.preview-box {
+	background-color: var(--grey-light2);
+	border-radius: 25px;
+	padding: 16px 20px;
+	box-sizing: border-box;
+	min-height: 16rem;
+}
+
+.preview-item {
+	display: grid;
+	grid-template-columns: 1fr 1fr auto auto;
+	gap: 0.5rem;
+	align-items: center;
+	margin-bottom: 0.25rem;
+}
+
+.ingredient-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.ingredient-box {
+	background-color: var(--grey-light2);
+	border-radius: 25px;
+	padding: 10px 16px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .order-list {
 	background-color: var(--grey-light2);
 	border-radius: 25px;
@@ -276,4 +309,15 @@ form button[name='checkout'] {
 	font-size: 18px;
 	text-align: center;
 	margin-top: 16px;
+}
+
+.draft-base-line {
+	color: #888;
+}
+
+.draft-remove-btn {
+	color: var(--accent-main);
+	font-weight: bold;
+	text-decoration: none;
+	margin-left: 8px;
 }
