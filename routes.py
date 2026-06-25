@@ -4,9 +4,8 @@ from imports import *
 # route setting to index.html
 @app.route("/", methods=["GET", "POST"])
 def main():
-    global voucher_code
+    # global voucher_code
     data = menu_connect()
-
     orders = order_connect()
 
     # total cost by summing (price * quantity) using for loop
@@ -48,7 +47,9 @@ def update_quantity(item_id):
         # remove item if quantity is zero
         cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
     else:
-        print("AAAHHHHHHHHHHH")  # i don't even know
+        print(
+            "AAAHHHHHHHHHHH"
+        )  # i don't even know -- this shouldn't be triggered at all?
     # if quantity is negative or too high, we just don't update anything
 
     conn.commit()
@@ -148,7 +149,6 @@ def drinks():
 @app.route("/customize")
 def customize():
     data = menu_connect("ingredient")
-
     orders = order_connect()
 
     # total cost by summing (price * quantity) using for loop

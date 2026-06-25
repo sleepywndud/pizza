@@ -55,10 +55,21 @@
 									<span>{{ item[1] }}</span>
 									<span></span>
 									<span>${{ item[2] }}</span>
-									<a href="{{ url_for('remove_ingredient', item_id=item[0]) }}" class="draft-remove-btn">×</a>
+									<a
+										href="{{ url_for('remove_ingredient', item_id=item[0]) }}"
+										class="draft-remove-btn"
+										>x</a
+									>
 								</div>
 								{% endfor %}
-								<div class="preview-item" style="margin-top: 8px; border-top: 1px solid #ccc; padding-top: 8px">
+								<div
+									class="preview-item"
+									style="
+										margin-top: 8px;
+										border-top: 1px solid #ccc;
+										padding-top: 8px;
+									"
+								>
 									<span><b>Total</b></span>
 									<span></span>
 									<span><b>${{ draft_total }}</b></span>
@@ -66,7 +77,9 @@
 							</div>
 							{% if draft %}
 							<a href="{{ url_for('add_custom_to_cart') }}">
-								<button class="add-to-order" style="margin-top: 16px; width: 100%">Add to Cart</button>
+								<button class="add-to-order" style="margin-top: 16px; width: 100%">
+									Add to Cart
+								</button>
 							</a>
 							{% endif %}
 						</div>
@@ -106,7 +119,7 @@
 												class="quantitymodify"
 												value="{{ order[3] }}"
 												min="0"
-												onchange="this.form.submit()"
+												onchange="form.submit()"
 											>
 										</form>
 									</div>
