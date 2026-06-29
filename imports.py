@@ -13,6 +13,13 @@ log.disabled = True
 app = Flask(__name__)
 
 
+def totalcost_calc(orders):
+    total_cost = 0.0
+    for order in orders:
+        total_cost += float(order[2]) * int(order[3])
+    return round(total_cost, 2)
+
+
 # database connecting functions
 def menu_connect(table="pizza"):
     conn = sqlite3.connect("database.db")

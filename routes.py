@@ -4,16 +4,12 @@ from imports import *
 # route setting to index.html
 @app.route("/", methods=["GET", "POST"])
 def main():
+    global orders
     # global voucher_code
     data = menu_connect()
     orders = order_connect()
 
-    # total cost by summing (price * quantity) using for loop
-    total_cost = 0.0
-    for order in orders:
-        total_cost += float(order[2]) * int(order[3])
-    # rounding to 2dp in case decimal place goes over 2
-    total_cost = round(total_cost, 2)
+    total_cost = totalcost_calc(orders)
 
     # voucher code section is not finished
     if request.method == "POST":
@@ -110,16 +106,11 @@ def add_to_order(name):
 # route setting to snacks.html
 @app.route("/snacks")
 def snacks():
+    global orders
     data = menu_connect("snack")
 
     orders = order_connect()
-
-    # total cost by summing (price * quantity) using for loop
-    total_cost = 0.0
-    for order in orders:
-        total_cost += float(order[2]) * int(order[3])
-    # rounding to 2dp in case decimal place goes over 2
-    total_cost = round(total_cost, 2)
+    total_cost = totalcost_calc(orders)
 
     return render_template(
         "snacks.html", data=data, orders=orders, total_cost=total_cost
@@ -129,16 +120,11 @@ def snacks():
 # route setting to drinks.html
 @app.route("/drinks")
 def drinks():
+    global orders
     data = menu_connect("drinks")
 
     orders = order_connect()
-
-    # total cost by summing (price * quantity) using for loop
-    total_cost = 0.0
-    for order in orders:
-        total_cost += float(order[2]) * int(order[3])
-    # rounding to 2dp in case decimal place goes over 2
-    total_cost = round(total_cost, 2)
+    total_cost = totalcost_calc(orders)
 
     return render_template(
         "drinks.html", data=data, orders=orders, total_cost=total_cost
@@ -148,6 +134,7 @@ def drinks():
 # route setting to customize.html
 @app.route("/customize")
 def customize():
+    global orders
     data = menu_connect("ingredient")
     orders = order_connect()
 
