@@ -36,7 +36,9 @@ def update_quantity(item_id):
     conn = sqlite3.connect("order.db")
     cr = conn.cursor()
 
-    if 0 < new_quantity <= 100:  # upper boundary is 100
+    if (
+        0 < new_quantity <= 100
+    ):  # quantity must be between 1 and 100 -- zero will delete the item
         # update quantity in the database to the corresponding itemid
         cr.execute("UPDATE cart SET quantity = ? WHERE id = ?", (new_quantity, item_id))
     elif new_quantity == 0:
@@ -44,9 +46,9 @@ def update_quantity(item_id):
         cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
     else:
         print(
-            "AAAHHHHHHHHHHH"
-        )  # i don't even know -- this shouldn't be triggered at all?
-    # if quantity is negative or too high, we just don't update anything
+            "Invalid Quantity Entered."
+        )  # triggered when integer quantity that doesn't fit inside 1~100 is entered
+    # if quantity is negative or too high, we just don't update anything -- send straight back to request.referrer
 
     conn.commit()
     conn.close()
@@ -63,12 +65,12 @@ def add_to_order(name):
     item_data = cr.fetchone()
 
     # if not in pizza, check snack table
-    if item_data is None:  # (if not in pizza table)
+    if item_data is None:  # if not in pizza table
         cr.execute("SELECT price FROM snack WHERE name = ?", (name,))
         item_data = cr.fetchone()  # set item_data as the price of the item
 
     # if not in snack, check drinks table
-    if item_data is None:
+    if item_data is None:  # if not in drinks table
         cr.execute("SELECT price FROM drinks WHERE name = ?", (name,))
         item_data = cr.fetchone()
 
@@ -227,3 +229,8 @@ def add_custom_to_cart():
     conn.close()
 
     return redirect(url_for("customize"))
+
+
+# @app.route("")
+# def apply_voucher():
+#     print("p")
