@@ -150,6 +150,7 @@ footer a {
 
 .item-pizza {
 	width: 100%;
+	height: 450px;
 	background-color: var(--grey-light1);
 	text-align: center;
 	border-radius: 10%;
@@ -189,6 +190,7 @@ footer a {
 	background-color: var(--accent-main);
 	color: var(--white-main);
 	font-weight: bold;
+	text-decoration: none;
 	font-family: SN Pro;
 	font-size: 18px;
 
@@ -196,15 +198,16 @@ footer a {
 }
 
 .add-to-order:hover {
-	width: 165px;
+	width: 175px;
 	height: 40px;
 	border-radius: 100px;
 	border-style: none;
 	background-color: var(--accent-main);
-	color: var(--white-main);
+	color: var(--grey-light2);
 	font-weight: bold;
+	text-decoration: underline;
 	font-family: SN Pro;
-	font-size: 18px;
+	font-size: 20px;
 }
 
 .add-ingredient-to-order {
