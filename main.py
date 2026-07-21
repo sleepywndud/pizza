@@ -11,9 +11,12 @@ from routes import *
 
 conn = sqlite3.connect("order.db")
 cr = conn.cursor()
-# empties the database data in order.db when program is ran
+
+# empties the table data in order.db when program is ran
 cr.execute("DELETE FROM cart")
 cr.execute("DELETE FROM custom_pizza_draft")
+cr.execute("DELETE FROM applied_voucher")
+
 conn.commit()
 conn.close()
 

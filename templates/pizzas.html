@@ -21,21 +21,21 @@
 			<div class="parent-grid">
 				<!-- menu grid start -->
 				<div class="menu-section">
-					<h2>Snacks</h2>
+					<h2>Pizzas</h2>
 					<div id="line-divider"></div>
 					<div class="grid_2-3">
 						<!-- uses for loop to print however many items that are on the db -->
-						{% for snack in data %}
+						{% for pizza in data %}
 						<div class="item-pizza">
 							<img
-								src="{{ url_for('static', filename='images/menu/snacks/' + snack[3]) }}"
-								alt="{{ snack[1] + ' Image'}}"
+								src="{{ url_for('static', filename='images/menu/pizza/' + pizza[3]) }}"
+								alt="{{ pizza[1] + 'Image'}}"
 							>
-							<p style="margin-bottom: 0">{{ snack[1] }}</p>
-							<!-- displays the "$" + the snack's cost -->
-							<p style="margin-top: 0">{{ '$' + snack[2] }}</p>
+							<p style="margin-bottom: 0">{{ pizza[1] }}</p>
+							<!-- displays the "$" + the pizza's cost -->
+							<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
 
-							<a href="{{ url_for('add_to_order', name=snack[1]) }}">
+							<a href="{{ url_for('add_to_order', name=pizza[1]) }}">
 								<button class="add-to-order">ADD TO ORDER</button>
 							</a>
 						</div>

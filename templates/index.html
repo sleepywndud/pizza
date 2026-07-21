@@ -13,95 +13,120 @@
 				<a href="{{ url_for('snacks') }}">SNACKS</a>
 				<a href="{{ url_for('drinks') }}">DRINKS</a>
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
+				<a href="{{ url_for('user_manual') }}" class="nav-help">?</a>
 			</nav>
 		</header>
 		<!-- header (navbar) end -->
 		<main>
-			<div class="parent-grid">
-				<!-- menu grid start -->
-				<div class="menu-section">
-					<h2>Pizzas</h2>
-					<div id="line-divider"></div>
-					<div class="grid_2-3">
-						<!-- uses for loop to print however many items that are on the db -->
-						{% for pizza in data %}
-						<div class="item-pizza">
-							<img
-								src="{{ url_for('static', filename='images/menu/pizza/' + pizza[3]) }}"
-								alt="{{ pizza[1] + 'Image'}}"
-							>
-							<p style="margin-bottom: 0">{{ pizza[1] }}</p>
-							<!-- displays the "$" + the pizza's cost -->
-							<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
+			<div class="parent-container">
+				<h2>Welcome!</h2>
+				<div id="line-divider"></div>
 
-							<a href="{{ url_for('add_to_order', name=pizza[1]) }}">
-								<button class="add-to-order">ADD TO ORDER</button>
-							</a>
-						</div>
-						{% endfor %}
-					</div>
-				</div>
-				<!-- menu grid end -->
-				<!-- order grid start -->
-				<div class="order-section">
-					<div style="padding: 35px">
-						<h2>Apply Voucher</h2>
-						<div id="line-divider"></div>
-						<form method="POST" name="voucher_code">
-							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
-							<button type="submit" name="voucher_code">SUBMIT</button>
-						</form>
+				<p>Welcome to the website!</p>
+				<p>
+					This website is created by Juyoung (James) Park as a L2 Software Development
+					Internal Project.
+				</p>
+				<p>Using this program, you can order some pizza!</p>
 
-						<h2>Order Summary</h2>
-						<div id="line-divider"></div>
-						<!-- order box start -->
-						<div class="order-list">
-							<!-- uses a for loop to print everything that's in the db -->
-							{% for order in orders %}
-							<!-- displays the name (col1), price (col2), and quantity (col3) of the item added to cart -->
-							<div class="order-item">
-								<div class="grid_3-1_1to1ratio">
-									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
-									<div style="text-align: left">
-										<form
-											action="{{ url_for('update_quantity', item_id=order[0]) }}"
-											method="POST"
-										>
-											<!-- uses form to pass numberinput value to the db -->
-											<input
-												type="number"
-												name="quantity"
-												class="quantitymodify"
-												value="{{ order[3] }}"
-												min="0"
-												onchange="form.submit()"
-											>
-										</form>
-									</div>
-									<p style="text-align: center">{{ order[1] }}</p>
-									<p style="text-align: right">
-										<!-- formats the price like 'quantity * price', and rounds to 2dp -->
-										${{ "%.2f"|format(order[2]|float * order[3]|int) }}
-									</p>
-								</div>
-							</div>
-							{% endfor %}
-							<div class="grid_2-1">
-								<p>Total</p>
-								<p style="text-align: right">${{ total_cost }}</p>
-							</div>
-						</div>
-						<!-- order box end -->
-						<p>
-							* Maximum amount of pizzas you can order online is 100. If you wish to
-							order more, please call the store.
-						</p>
-						<form method="POST" name="checkout">
-							<button type="submit" name="checkout">CHECKOUT</button>
-						</form>
-					</div>
-				</div>
-				<!-- order grid end -->
+				<b
+					>This page can be reopened by clicking the
+					<a href="{{ url_for('user_manual') }}" class="nav-help">?</a> button in the
+					navbar.</b
+				>
+
+				<div class="divider"></div>
+
+				<h2>For the User</h2>
+				<div id="line-divider"></div>
+
+				<h3>Navbar</h3>
+				<p>
+					Users can navigate around the website by using the links located on the blue bar
+					on the <b>top of the page</b>.
+				</p>
+
+				<div class="smalldivider"></div>
+				<h3>Cart</h3>
+				<p>
+					Each page has different items that the user can add to their cart. <br>
+					The cart can be located on the <b>right hand side of the page</b>.
+				</p>
+				<p>
+					The quantity of items in the cart can be modified by using the
+					<b>number input</b> like this -->
+					<input type="number" style="width: 64px" placeholder="EXAMPLE NUMBER INPUT">
+					<br>
+					Alternatively, you can enter your own number into the number input.
+				</p>
+				<p>
+					An item in the cart can be removed by clicking the blue 'x' button next to its
+					price like this --> <a class="order-item-remove-btn">x</a>
+				</p>
+
+				<div class="smalldivider"></div>
+				<h3>Voucher</h3>
+				<p>
+					A voucher code can be entered by typing the voucher code on the right hand side
+					of the page inside the designated box that looks like the following:
+				</p>
+				<form name="voucher_code" style="width: 256px">
+					<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
+				</form>
+				<p>
+					<b
+						>Please note that the only available codes are the following: <br>
+						- "HELLOWORLD" (20% Discount) <br>
+						- "FREEPIZZA" (100% Discount)
+					</b>
+				</p>
+				<p>
+					They should be case-sensitive. Do not include the quotation marks as part of the
+					voucher code.
+				</p>
+				<p>
+					Then, click the 'SUBMIT' button to submit the voucher code, and apply the
+					discount. This is found right below the section where you enter your voucher
+					code. <br>
+					The button looks like the following:
+				</p>
+				<form name="voucher_code" style="text-align: left; margin-top: -20px">
+					<button type="submit" name="voucher_code">SUBMIT</button>
+				</form>
+
+				<div class="smalldivider"></div>
+				<h3>Pizza Customization</h3>
+				<p>In the 'CUSTOMIZE' page (on navbar), users can customize their pizzas.</p>
+				<p>
+					They can add an ingredient onto the base dough by clicking the following button:
+					<a>
+						<button class="add-ingredient-to-order">+</button>
+					</a>
+				</p>
+				<p>
+					Once the ingredient is added, it should be visible under the 'Preview' section.
+				</p>
+				<p>
+					After adding as many ingredients as desired, click theblue 'ADD TO CART' button
+					to finalize the pizza and add it to the cart. <br>
+					The button looks like the following:
+				</p>
+				<button class="add-to-order" style="margin-top: 16px; margin-bottom: 16px">
+					Add to Cart
+				</button>
+				<b>NOTE: The ingredients cannot be changed once added to the cart.</b>
+				<p>After adding to the cart, 'Custom Pizza' should be visible in the cart.</p>
+
+				<div class="smalldivider"></div>
+				<h3>Checkout</h3>
+				<b>Please note that this program does not have a proper 'checkout' system.</b>
+				<p>Clicking the checkout button only clears the cart, and the applied vouchers.</p>
+
+				<div class="divider"></div>
+				<h2>Help</h2>
+				<div id="line-divider"></div>
+				<p>Still require assistance?</p>
+				<p>Please email <b>juyoung.parkk8@gmail.com</b>.</p>
 			</div>
 		</main>
 		<!-- footer start -->

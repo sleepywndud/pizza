@@ -13,6 +13,7 @@
 				<a href="{{ url_for('snacks') }}">SNACKS</a>
 				<a href="{{ url_for('drinks') }}">DRINKS</a>
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
+				<a href="{{ url_for('user_manual') }}" class="nav-help">?</a>
 			</nav>
 		</header>
 		<!-- header (navbar) end -->
@@ -48,7 +49,7 @@
 								<div class="preview-item">
 									<span class="draft-base-line">Base Dough</span>
 									<span></span>
-									<span class="draft-base-line">$5.00</span>
+									<span class="draft-base-line">$5.0</span>
 								</div>
 								{% for item in draft %}
 								<div class="preview-item">
@@ -105,7 +106,7 @@
 							{% for order in orders %}
 							<!-- displays the name (col1), price (col2), and quantity (col3) of the item added to cart -->
 							<div class="order-item">
-								<div class="grid_3-1_1to1ratio">
+								<div class="grid_order-item">
 									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
 									<div style="text-align: left">
 										<form
@@ -116,7 +117,6 @@
 											<input
 												type="number"
 												name="quantity"
-												class="quantitymodify"
 												value="{{ order[3] }}"
 												min="0"
 												onchange="form.submit()"
@@ -128,18 +128,51 @@
 										<!-- formats the price like 'quantity * price', and rounds to 2dp -->
 										${{ "%.2f"|format(order[2]|float * order[3]|int) }}
 									</p>
+									<a
+										href="{{ url_for('remove_from_cart', item_id=order[0]) }}"
+										class="order-item-remove-btn"
+										>x</a
+									>
 								</div>
 							</div>
-							{% endfor %}
+							{% endfor %} {% if voucher %}
+							<div class="grid_2-1">
+								<p>Subtotal</p>
+								<p style="text-align: right">${{ total_cost }}</p>
+							</div>
+							<div class="order-item">
+								<div class="grid_order-item">
+									<p style="text-align: left; white-space: nowrap">
+										Discount ({{ voucher[1] }}%)
+									</p>
+									<div></div>
+									<p style="text-align: right">
+										-${{ "%.2f"|format(total_cost - discounted_total) }}
+									</p>
+									<a
+										href="{{ url_for('remove_voucher_route') }}"
+										class="order-item-remove-btn"
+										>x</a
+									>
+								</div>
+							</div>
+							<div class="grid_2-1">
+								<p>Total</p>
+								<p style="text-align: right">
+									${{ "%.2f"|format(discounted_total) }}
+								</p>
+							</div>
+							{% else %}
 							<div class="grid_2-1">
 								<p>Total</p>
 								<p style="text-align: right">${{ total_cost }}</p>
 							</div>
+							{% endif %}
 						</div>
 						<!-- order box end -->
 						<p>
-							* Maximum amount of pizzas you can order online is 100. If you wish to
-							order more, please call the store.
+							* Maximum amount of a single item that can be ordered online is 100. If
+							you wish to order more, please call the store.
 						</p>
 						<form method="POST" name="checkout">
 							<button type="submit" name="checkout">CHECKOUT</button>

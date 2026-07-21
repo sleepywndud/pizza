@@ -1,24 +1,36 @@
 from imports import *
 
 
-# route setting to index.html
-@app.route("/", methods=["GET", "POST"])
+# route setting to pizzas.html
+@app.route("/pizzas", methods=["GET", "POST"])
 def main():
     global orders
-    # global voucher_code
     data = menu_connect()
     orders = order_connect()
 
-    total_cost = totalcost_calc(orders)
+    # use voucher code from the voucher_code form in HTML
+    if request.method == "POST" and "voucher_code" in request.form:
+        apply_voucher(request.form.get("voucher_code"))
 
-    # voucher code section is not finished
-    if request.method == "POST":
-        voucher_code = request.form.get("voucher_code")
-        print(f"\n\nVoucher Code Received: {voucher_code}\n\n")
+    # calculations involving total price and discounted price
+    total_cost = totalcost_calc(orders)
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
 
     return render_template(
-        "index.html", data=data, orders=orders, total_cost=total_cost
+        "pizzas.html",
+        data=data,
+        orders=orders,
+        total_cost=total_cost,
+        voucher=voucher,
+        discounted_total=discounted_total,
     )
+
+
+@app.route("/remove_voucher")
+def remove_voucher_route():
+    remove_voucher()
+    return redirect(request.referrer or url_for("main"))
 
 
 @app.route("/update_quantity/<int:item_id>", methods=["POST"])
@@ -52,6 +64,18 @@ def update_quantity(item_id):
 
     conn.commit()
     conn.close()
+    return redirect(request.referrer or url_for("main"))
+
+
+@app.route("/remove_from_cart/<int:item_id>")
+def remove_from_cart(item_id):
+    conn = sqlite3.connect("order.db")
+    cr = conn.cursor()
+    # deletes the item specified
+    cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
+    conn.commit()
+    conn.close()
+
     return redirect(request.referrer or url_for("main"))
 
 
@@ -98,7 +122,7 @@ def add_to_order(name):
                 "INSERT INTO cart (name, price, quantity) VALUES (?, ?, 1)",
                 (name, price),
             )
-        #  [] = asdf.execure(asdfasdfasdf)
+        #  [] =
         conn.commit()
         conn.close()
 
@@ -106,39 +130,69 @@ def add_to_order(name):
 
 
 # route setting to snacks.html
-@app.route("/snacks")
+@app.route("/snacks", methods=["GET", "POST"])
 def snacks():
     global orders
     data = menu_connect("snack")
 
     orders = order_connect()
+
+    # use voucher code from the voucher_code form in HTML
+    if request.method == "POST" and "voucher_code" in request.form:
+        apply_voucher(request.form.get("voucher_code"))
+
+    # cost calculation
     total_cost = totalcost_calc(orders)
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
 
     return render_template(
-        "snacks.html", data=data, orders=orders, total_cost=total_cost
+        "snacks.html",
+        data=data,
+        orders=orders,
+        total_cost=total_cost,
+        voucher=voucher,
+        discounted_total=discounted_total,
     )
 
 
 # route setting to drinks.html
-@app.route("/drinks")
+@app.route("/drinks", methods=["GET", "POST"])
 def drinks():
     global orders
     data = menu_connect("drinks")
 
     orders = order_connect()
+
+    # use voucher code from the voucher_code form in HTML
+    if request.method == "POST" and "voucher_code" in request.form:
+        apply_voucher(request.form.get("voucher_code"))
+
+    # cost calculation
     total_cost = totalcost_calc(orders)
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
 
     return render_template(
-        "drinks.html", data=data, orders=orders, total_cost=total_cost
+        "drinks.html",
+        data=data,
+        orders=orders,
+        total_cost=total_cost,
+        voucher=voucher,
+        discounted_total=discounted_total,
     )
 
 
 # route setting to customize.html
-@app.route("/customize")
+@app.route("/customize", methods=["GET", "POST"])
 def customize():
     global orders
     data = menu_connect("ingredient")
     orders = order_connect()
+
+    # use voucher code from the voucher_code form in HTML
+    if request.method == "POST" and "voucher_code" in request.form:
+        apply_voucher(request.form.get("voucher_code"))
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0
@@ -146,6 +200,10 @@ def customize():
         total_cost += float(order[2]) * int(order[3])
     # rounding to 2dp in case decimal place goes over 2
     total_cost = round(total_cost, 2)
+
+    # cost calculation
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
 
     draft = draft_connect()
 
@@ -160,6 +218,8 @@ def customize():
         data=data,
         orders=orders,
         total_cost=total_cost,
+        voucher=voucher,
+        discounted_total=discounted_total,
         draft=draft,
         draft_total=draft_total,
     )
@@ -202,6 +262,11 @@ def remove_ingredient(item_id):
     return redirect(url_for("customize"))
 
 
+@app.route("/")
+def user_manual():
+    return render_template("index.html")
+
+
 @app.route("/add_custom_to_cart")
 def add_custom_to_cart():
     draft = draft_connect()
@@ -229,8 +294,3 @@ def add_custom_to_cart():
     conn.close()
 
     return redirect(url_for("customize"))
-
-
-# @app.route("")
-# def apply_voucher():
-#     print("p")
