@@ -54,7 +54,7 @@ h2 {
 	display: flex;
 	align-items: center;
 	gap: 10rem; /* to prevent horizontal overflow that creates unnecessary whitespace */
-	padding: 1.4rem;
+	padding: 1.1rem;
 	box-sizing: border-box;
 }
 
@@ -70,8 +70,6 @@ h2 {
 	justify-content: center;
 	width: 28px;
 	height: 28px;
-	border: 2px solid var(--white-main);
-	border-radius: 50%;
 	font-size: 16px;
 	margin-left: auto;
 }
@@ -127,6 +125,13 @@ footer a {
 
 /* 2 by 3 grid */
 .grid_2-3 {
+	/* realized when making the search function */
+	/* using repeat(2,1fr) only explicitly defines 2 rows */
+	/* however, this doesn't limit the grid to 2 rows */
+	/* => this grid is basically 3 columns, and as much rows as needed */
+
+	/* this should apply other grids in this css file too :) */
+
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(2, 1fr);
@@ -381,4 +386,63 @@ form button[name='checkout']:hover {
 
 .parent-container {
 	margin: 30px;
+}
+
+form[name='search_bar'] {
+	text-align: right;
+}
+
+form input[name='search_bar'] {
+	background-color: var(--grey-light2);
+	border: none;
+	border-radius: 100px;
+	height: 50px;
+	width: 100%;
+	font-family: SN Pro;
+	font-weight: bold;
+	font-size: large;
+	color: var(--white-main);
+	text-align: center;
+}
+
+form button[name='search_bar'] {
+	width: 100px;
+	height: 35px;
+	border-radius: 100px;
+	border-style: none;
+	background-color: var(--accent-main);
+	color: var(--white-main);
+	font-weight: bold;
+	font-family: SN Pro;
+	font-size: 18px;
+	text-align: center;
+	margin-top: 16px;
+
+	transition: background-color 0.5s ease;
+}
+
+form button[name='search_bar']:hover {
+	background-color: var(--accent-sub);
+}
+
+select[name='sort'] {
+	width: 120px;
+	height: 35px;
+	border-radius: 100px;
+	border-style: none;
+	background-color: var(--accent-main);
+	color: var(--white-main);
+	font-weight: bold;
+	font-family: SN Pro;
+	font-size: 18px;
+	text-align: center;
+	margin-top: 16px;
+
+	/* appearance: none; */
+
+	transition: background-color 0.5s ease;
+}
+
+select[name='sort']:hover {
+	background-color: var(--accent-sub);
 }

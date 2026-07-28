@@ -294,3 +294,35 @@ def add_custom_to_cart():
     conn.close()
 
     return redirect(url_for("customize"))
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    global orders
+    orders = order_connect()
+
+    if request.method == "POST" and "voucher_code" in request.form:
+        apply_voucher(request.form.get("voucher_code"))
+
+    results = []  # clears (init) search results when page loaded with search
+    query = None  # also clears userinput upon refresh
+    if request.method == "POST" and "search_bar" in request.form:
+        query = (
+            request.form.get("search_bar", "").strip().lower()
+        )  # userinput goes here
+        if query:
+            results = search_menu(query)
+
+    total_cost = totalcost_calc(orders)
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
+
+    return render_template(
+        "search.html",
+        results=results,
+        query=query,
+        orders=orders,
+        total_cost=total_cost,
+        voucher=voucher,
+        discounted_total=discounted_total,
+    )

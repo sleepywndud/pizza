@@ -9,11 +9,24 @@
 		<!-- header (navbar) start -->
 		<header>
 			<nav class="navbar">
+				<a href="{{ url_for('search') }}">
+					<img
+						src="{{ url_for('static', filename='images/search.png') }}"
+						alt=""
+						width="32px"
+					>
+				</a>
 				<a href="{{ url_for('main') }}">PIZZAS</a>
 				<a href="{{ url_for('snacks') }}">SNACKS</a>
 				<a href="{{ url_for('drinks') }}">DRINKS</a>
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
-				<a href="{{ url_for('user_manual') }}" class="nav-help">?</a>
+				<a href="{{ url_for('user_manual') }}" class="nav-help">
+					<img
+						src="{{ url_for('static', filename='images/help.png') }}"
+						alt=""
+						width="32px"
+					>
+				</a>
 			</nav>
 		</header>
 		<!-- header (navbar) end -->

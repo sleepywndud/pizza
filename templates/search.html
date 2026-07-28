@@ -34,25 +34,44 @@
 			<div class="parent-grid">
 				<!-- menu grid start -->
 				<div class="menu-section">
-					<h2>Drinks</h2>
+					<h2>Search Items</h2>
 					<div id="line-divider"></div>
+					<form method="POST" name="search_bar">
+						<input
+							type="text"
+							name="search_bar"
+							placeholder="ENTER ITEM NAME"
+							value="{{ query or '' }}"
+						>
+						<button type="submit" name="search_bar">SEARCH</button>
+					</form>
+
+					<p>Sort by:</p>
+					<select name="sort" id="sort">
+						<option value="price">PRICE</option>
+						<option value="rating">RATING</option>
+					</select>
+
+					<h2>Search Results</h2>
+					<div id="line-divider"></div>
+
 					<div class="grid_2-3">
-						<!-- uses for loop to print however many items that are on the db -->
-						{% for drink in data %}
+						{% for item in results %}
 						<div class="item-pizza">
 							<img
-								src="{{ url_for('static', filename='images/menu/drinks/' + drink[3]) }}"
-								alt="{{ drink[1] + ' Image'}}"
+								src="{{ url_for('static', filename='images/menu/' + item[3]) }}"
+								alt="{{ item[1] + 'Image' }}"
 							>
-							<p style="margin-bottom: 0">{{ drink[1] }}</p>
-							<!-- displays the "$" + the drink's cost -->
-							<p style="margin-top: 0">{{ '$' + drink[2] }}</p>
+							<p style="margin-bottom: 0">{{ item[1] }}</p>
+							<p style="margin-top: 0">{{ '$' + item[2] }}</p>
 
-							<a href="{{ url_for('add_to_order', name=drink[1]) }}">
+							<a href="{{ url_for('add_to_order', name=item[1]) }}">
 								<button class="add-to-order">ADD TO ORDER</button>
 							</a>
 						</div>
-						{% endfor %}
+						{% else %} {% if query %}
+						<p>No "{{ query }}" found.</p>
+						{% endif %} {% endfor %}
 					</div>
 				</div>
 				<!-- menu grid end -->

@@ -72,9 +72,9 @@ def apply_voucher(code):
     voucher_data = cr.fetchone()
     conn.close()
 
-    #  catches all non-existing voucher codes
+    #  catches all non-existing voucher codes and returns nothing (False)
     if voucher_data is None:
-        return False
+        return False  # could add error msg in future for invalid voucher codes
 
     # gets the data -- [0] used since it's a tuple
     discount_percentage = voucher_data[0]
@@ -110,3 +110,37 @@ def apply_discount(total_cost, voucher):
     discount_percentage = voucher[1]
     discounted = total_cost * (1 - discount_percentage / 100)
     return round(discounted, 2)
+
+
+def search_menu(query):
+    like_query = f"%{query}%"
+
+    results = []
+    conn = sqlite3.connect("database.db")
+    cr = conn.cursor()
+
+    # indexes through the following tables for any reference(s) to {like_query}
+    # then appends it to the 'results' list.
+    # that list is then sent to the frontend
+
+    cr.execute("SELECT * FROM pizza WHERE name LIKE ?", (like_query,))
+    for row in cr.fetchall():
+        # NOTE: since there is 'ratings' column in the db (WIP),
+        # it produces ValueError: too many values to unpack (expected 4)
+        # for now (until rating is fully added), use "_" as a placeholder so that it works
+        item_id, name, price, image, _ = row
+        results.append((item_id, name, price, "pizza/" + image))
+
+    cr.execute("SELECT * FROM snack WHERE name LIKE ?", (like_query,))
+    for row in cr.fetchall():
+        item_id, name, price, image, _ = row
+        results.append((item_id, name, price, "snacks/" + image))
+
+    cr.execute("SELECT * FROM drinks WHERE name LIKE ?", (like_query,))
+    for row in cr.fetchall():
+        item_id, name, price, image, _ = row
+        results.append((item_id, name, price, "drinks/" + image))
+
+    conn.close()
+
+    return results
