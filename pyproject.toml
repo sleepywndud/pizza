@@ -1,4 +1,4 @@
 # Ruff formatter configs.
 
 [tool.ruff]
-ignore = ["F403", "F405", "F401", "E722", "F811"]
+ignore = ["F403", "F405", "F401", "E722", "F811", "I001"]
