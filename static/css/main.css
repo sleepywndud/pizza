@@ -4,12 +4,13 @@
 }
 
 :root {
-	--white-main: #f6f7fa;
-	--accent-main: #0145f2;
-	--accent-sub: #668cec;
-	--grey-light1: #edf1f5;
-	--grey-light2: #d3dae2;
-	--grey-dark: #303437;
+	/* got obsessed with oklch colors */
+	--white-main: oklch(97.6% 0.004 271.4);
+	--accent-main: oklch(49.4% 0.261 263.5);
+	--accent-sub: oklch(69% 0.261 263.5);
+	--grey-light1: oklch(95.6% 0.007 247.9);
+	--grey-light2: oklch(88.5% 0.013 251.6);
+	--grey-dark: oklch(32.2% 0.008 240.1);
 }
 
 body {
@@ -51,6 +52,8 @@ h2 {
 
 	width: 100%;
 	background-color: var(--accent-main);
+	/* background: linear-gradient(to right in oklch, var(--accent-main), oklch(62.8% 0.258 29.2)); */
+	/* background: linear-gradient(to right, var(--accent-main), oklch(62.8% 0.258 29.2)); */
 	display: flex;
 	align-items: center;
 	gap: 10rem; /* to prevent horizontal overflow that creates unnecessary whitespace */
@@ -367,7 +370,7 @@ form button[name='checkout']:hover {
 }
 
 .draft-base-line {
-	color: #888;
+	color: var(--grey-dark);
 }
 
 .draft-remove-btn {
@@ -426,7 +429,7 @@ form button[name='search_bar']:hover {
 }
 
 select[name='sort'] {
-	width: 120px;
+	width: 250px;
 	height: 35px;
 	border-radius: 100px;
 	border-style: none;
@@ -445,4 +448,5 @@ select[name='sort'] {
 
 select[name='sort']:hover {
 	background-color: var(--accent-sub);
+	margin-top: 0;
 }

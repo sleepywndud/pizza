@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Donimo's</title>
+		<title>Babo Bobo's Pizzaria | Search</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 	</head>
 	<body>
@@ -44,13 +44,21 @@
 							value="{{ query or '' }}"
 						>
 						<button type="submit" name="search_bar">SEARCH</button>
-					</form>
 
-					<p>Sort by:</p>
-					<select name="sort" id="sort">
-						<option value="price">PRICE</option>
-						<option value="rating">RATING</option>
-					</select>
+						<p>Sort by:</p>
+
+						<!-- prettier-ignore -->
+						<select name="sort" id="sort" onchange="form.submit()" style="margin-top: 0;">
+							<!-- unfortunately my formatter (prettier) changes the -->
+							<!-- functionality of this code by mistaking the {} blocks -->
+							<!-- this <select> block has been force-ignored -->
+							<option value="price-ascending" {% if sort_by=='price-ascending' %}selected{% endif %}>PRICE (LOW TO HIGH)</option>
+							<option value="price-descending" {% if sort_by=='price-descending' %}selected{% endif %}>PRICE (HIGH TO LOW)</option>
+							<option value="rating-ascending" {% if sort_by=='rating-ascending' %}selected{% endif %}>RATING (LOW TO HIGH)</option>
+							<option value="rating-descending" {% if sort_by=='rating-descending' %}selected{% endif %}>RATING (HIGH TO LOW)</option>
+						</select>
+						<div class="smalldivider"></div>
+					</form>
 
 					<h2>Search Results</h2>
 					<div id="line-divider"></div>

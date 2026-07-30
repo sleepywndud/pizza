@@ -21,10 +21,18 @@ def totalcost_calc(orders):
 
 
 # database connecting functions
-def menu_connect(table="pizza"):
+def menu_connect(table="pizza", sort_by=None):
+    # sort_by comes from the <select id="sort"> in the menu pages, e.g.
+    # "price-ascending" or "rating-descending"
+    sort_by = sort_by or "price-ascending"
+    field, _, direction = sort_by.partition("-")
+
+    sort_column = "rating" if field == "rating" else "price"
+    sort_direction = "DESC" if direction == "descending" else "ASC"
+
     conn = sqlite3.connect("database.db")
     cr = conn.cursor()
-    cr.execute(f"SELECT * FROM {table}")
+    cr.execute(f"SELECT * FROM {table} ORDER BY {sort_column} {sort_direction}")
     data = cr.fetchall()
     conn.close()
 
@@ -112,35 +120,72 @@ def apply_discount(total_cost, voucher):
     return round(discounted, 2)
 
 
-def search_menu(query):
+def search_menu(query, sort_by=None):
     like_query = f"%{query}%"
 
-    results = []
+    # sort_by comes from the <select id="sort"> in search.html, e.g.
+    # "price-ascending" or "rating-descending"
+    sort_by = sort_by or "price-ascending"
+    field, _, direction = sort_by.partition("-")
+
+    # if the query names a whole category (e.g. "drinks" or "snack"), match
+    # every row in that table instead of filtering by name
+
+    # table names and their aliases; NOTE: might be better if changed in the fture
+    table_names = {
+        "pizza": "pizza",
+        "snack": "snack",
+        "snacks": "snack",
+        "drinks": "drinks",
+    }
+    category_table = table_names.get(query)
+
+    #  bunch of ifs to determine sorting configs
+    if category_table == "pizza":
+        pizza_query = "%"
+    else:
+        pizza_query = like_query
+
+    if category_table == "snack":
+        snack_query = "%"
+    else:
+        snack_query = like_query
+
+    if category_table == "drinks":
+        drinks_query = "%"
+    else:
+        drinks_query = like_query
+
+    if field == "rating":
+        sort_column = "rating"
+    else:
+        sort_column = "price"
+
+    if direction == "descending":
+        sort_direction = "DESC"
+    else:
+        sort_direction = "ASC"
+
+    # using multiple queries (from multiple tables) using UNION ALL
+    # using this as a var because the code is too long to fit in the execute
+    sql = f"""
+        SELECT id, name, price, imageURL, 'pizza/' AS folder FROM pizza WHERE name LIKE ?
+        UNION ALL
+        SELECT id, name, price, imageURL, 'snacks/' AS folder FROM snack WHERE name LIKE ?
+        UNION ALL
+        SELECT id, name, price, imageURL, 'drinks/' AS folder FROM drinks WHERE name LIKE ?
+        ORDER BY {sort_column} {sort_direction}
+    """
+
     conn = sqlite3.connect("database.db")
     cr = conn.cursor()
-
-    # indexes through the following tables for any reference(s) to {like_query}
-    # then appends it to the 'results' list.
-    # that list is then sent to the frontend
-
-    cr.execute("SELECT * FROM pizza WHERE name LIKE ?", (like_query,))
-    for row in cr.fetchall():
-        # NOTE: since there is 'ratings' column in the db (WIP),
-        # it produces ValueError: too many values to unpack (expected 4)
-        # for now (until rating is fully added), use "_" as a placeholder so that it works
-        item_id, name, price, image, _ = row
-        results.append((item_id, name, price, "pizza/" + image))
-
-    cr.execute("SELECT * FROM snack WHERE name LIKE ?", (like_query,))
-    for row in cr.fetchall():
-        item_id, name, price, image, _ = row
-        results.append((item_id, name, price, "snacks/" + image))
-
-    cr.execute("SELECT * FROM drinks WHERE name LIKE ?", (like_query,))
-    for row in cr.fetchall():
-        item_id, name, price, image, _ = row
-        results.append((item_id, name, price, "drinks/" + image))
-
+    cr.execute(sql, (pizza_query, snack_query, drinks_query))
+    rows = cr.fetchall()
     conn.close()
 
+    # each row is (id, name, price, imageURL, folder); combine folder+imageURL
+    # into one path so templates get (id, name, price, image_path)
+    results = []
+    for item_id, name, price, image, folder in rows:
+        results.append((item_id, name, price, folder + image))
     return results

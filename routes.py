@@ -5,7 +5,8 @@ from imports import *
 @app.route("/pizzas", methods=["GET", "POST"])
 def main():
     global orders
-    data = menu_connect()
+    sort_by = request.form.get("sort", "price-ascending")
+    data = menu_connect("pizza", sort_by)
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
@@ -24,6 +25,7 @@ def main():
         total_cost=total_cost,
         voucher=voucher,
         discounted_total=discounted_total,
+        sort_by=sort_by,
     )
 
 
@@ -133,7 +135,8 @@ def add_to_order(name):
 @app.route("/snacks", methods=["GET", "POST"])
 def snacks():
     global orders
-    data = menu_connect("snack")
+    sort_by = request.form.get("sort", "price-ascending")
+    data = menu_connect("snack", sort_by)
 
     orders = order_connect()
 
@@ -153,6 +156,7 @@ def snacks():
         total_cost=total_cost,
         voucher=voucher,
         discounted_total=discounted_total,
+        sort_by=sort_by,
     )
 
 
@@ -160,7 +164,8 @@ def snacks():
 @app.route("/drinks", methods=["GET", "POST"])
 def drinks():
     global orders
-    data = menu_connect("drinks")
+    sort_by = request.form.get("sort", "price-ascending")
+    data = menu_connect("drinks", sort_by)
 
     orders = order_connect()
 
@@ -180,6 +185,7 @@ def drinks():
         total_cost=total_cost,
         voucher=voucher,
         discounted_total=discounted_total,
+        sort_by=sort_by,
     )
 
 
@@ -306,12 +312,13 @@ def search():
 
     results = []  # clears (init) search results when page loaded with search
     query = None  # also clears userinput upon refresh
+    sort_by = request.form.get("sort", "price-ascending")
     if request.method == "POST" and "search_bar" in request.form:
         query = (
             request.form.get("search_bar", "").strip().lower()
         )  # userinput goes here
         if query:
-            results = search_menu(query)
+            results = search_menu(query, sort_by)
 
     total_cost = totalcost_calc(orders)
     voucher = voucher_connect()
@@ -321,6 +328,7 @@ def search():
         "search.html",
         results=results,
         query=query,
+        sort_by=sort_by,
         orders=orders,
         total_cost=total_cost,
         voucher=voucher,
