@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Babo Bobo's Pizzaria | Customize Pizza</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 	</head>
@@ -13,7 +14,7 @@
 					<img
 						src="{{ url_for('static', filename='images/search.png') }}"
 						alt=""
-						width="32px"
+						style="width: 32px"
 					>
 				</a>
 				<a href="{{ url_for('main') }}">PIZZAS</a>
@@ -24,7 +25,7 @@
 					<img
 						src="{{ url_for('static', filename='images/help.png') }}"
 						alt=""
-						width="32px"
+						style="width: 32px"
 					>
 				</a>
 			</nav>
@@ -34,21 +35,24 @@
 			<div class="parent-grid">
 				<!-- menu grid start -->
 				<div class="menu-section">
-					<h2>Customize Pizza</h2>
-					<div id="line-divider"></div>
+					<h1>Customize Pizza</h1>
+					<div class="line-divider"></div>
 					<div class="grid_3-1_1to3ratio">
 						<!-- ingredient selection section -->
 						<div>
 							<div class="ingredient-list">
+								<p>You can scroll down for more ingredients, too!</p>
 								{% for ingredient in data %}
 								<div class="ingredient-box item-ingredient">
 									<div>
 										<b style="margin-bottom: 0">{{ ingredient[1] }}</b>
 										<p style="margin-top: 0">{{"+ " '$' + ingredient[2] }}</p>
 									</div>
-									<a href="{{ url_for('ingredient', name=ingredient[1]) }}">
-										<button class="add-ingredient-to-order">+</button>
-									</a>
+									<a
+										href="{{ url_for('ingredient', name=ingredient[1]) }}"
+										class="add-ingredient-to-order"
+										>+</a
+									>
 								</div>
 								{% endfor %}
 							</div>
@@ -57,7 +61,7 @@
 						<!-- pizza preview section -->
 						<div style="margin-left: 32px">
 							<h2>Preview</h2>
-							<div id="line-divider"></div>
+							<div class="line-divider"></div>
 							<div class="preview-box">
 								<div class="preview-item">
 									<span class="draft-base-line">Base Dough</span>
@@ -90,13 +94,15 @@
 								</div>
 							</div>
 							{% if draft %}
-							<a href="{{ url_for('add_custom_to_cart') }}">
-								<button class="add-to-order" style="margin-top: 16px; width: 100%">
-									Add to Cart
-								</button>
-							</a>
+							<a
+								href="{{ url_for('add_custom_to_cart') }}"
+								class="add-to-order"
+								style="margin-top: 16px; width: 100%"
+								>Add to Cart</a
+							>
 							{% endif %}
 						</div>
+						<div class="smalldivider"></div>
 						<!-- pizza preview section end -->
 					</div>
 				</div>
@@ -105,14 +111,17 @@
 				<div class="order-section">
 					<div style="padding: 35px">
 						<h2>Apply Voucher</h2>
-						<div id="line-divider"></div>
+						<div class="line-divider"></div>
 						<form method="POST" name="voucher_code">
 							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
 							<button type="submit" name="voucher_code">SUBMIT</button>
 						</form>
+						{% if errormessage %}
+						<p style="color: var(--oh-no)">{{ errormessage }}</p>
+						{% endif %}
 
 						<h2>Order Summary</h2>
-						<div id="line-divider"></div>
+						<div class="line-divider"></div>
 						<!-- order box start -->
 						<div class="order-list">
 							<!-- uses a for loop to print everything that's in the db -->
@@ -187,9 +196,9 @@
 							* Maximum amount of a single item that can be ordered online is 100. If
 							you wish to order more, please call the store.
 						</p>
-						<form method="POST" name="checkout">
-							<button type="submit" name="checkout">CHECKOUT</button>
-						</form>
+						<a href="{{ url_for('checkout') }}" class="checkout-link checkout-btn"
+							>CHECKOUT</a
+						>
 					</div>
 				</div>
 				<!-- order grid end -->
@@ -202,7 +211,7 @@
 					<img
 						src="{{ url_for('static', filename='images/logo.png') }}"
 						alt="logo"
-						width="50%"
+						style="width: 50%"
 					>
 				</div>
 				<div>

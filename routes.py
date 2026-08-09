@@ -1,5 +1,9 @@
 from imports import *
 
+# remembers the last search so it survives the redirect after adding an item to order
+last_query = None
+last_sort_by = "price-ascending"
+
 
 # route setting to pizzas.html
 @app.route("/pizzas", methods=["GET", "POST"])
@@ -10,8 +14,20 @@ def main():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    if request.method == "POST" and "voucher_code" in request.form:
-        apply_voucher(request.form.get("voucher_code"))
+
+    # triple condition for error message:
+    # 1. must be a post request
+    # 2. must be a voucher_code post request
+    # 3. entered (by user) code must NOT be in the voucher db
+    errormessage = None  # (init) no errors at initialization
+    if (
+        request.method == "POST"  # post req
+        and "voucher_code" in request.form  # if request is voucher code
+        and not apply_voucher(
+            request.form.get("voucher_code")
+        )  # if it ISN'T in the voucher table
+    ):
+        errormessage = "Invalid voucher code entered."
 
     # calculations involving total price and discounted price
     total_cost = totalcost_calc(orders)
@@ -26,6 +42,7 @@ def main():
         voucher=voucher,
         discounted_total=discounted_total,
         sort_by=sort_by,
+        errormessage=errormessage,
     )
 
 
@@ -115,9 +132,19 @@ def add_to_order(name):
         if item is not None:
             # if item exists, increase the quantity by one
             new_quantity = item[0] + 1
-            cr.execute(
-                "UPDATE cart SET quantity = ? WHERE name = ?", (new_quantity, name)
-            )
+
+            if (
+                0 < new_quantity <= 100
+            ):  # quantity must be between 1 and 100 -- zero will delete the item
+                # update quantity in the database to the corresponding itemid
+                cr.execute(
+                    "UPDATE cart SET quantity = ? WHERE name = ?", (new_quantity, name)
+                )
+            else:
+                print(
+                    "Invalid Quantity Entered."
+                )  # triggered when integer quantity that doesn't fit inside 1~100 is entered
+            # if quantity is too high, we just don't update anything
         else:
             # if item doesn't exist, then add the row to the db with quantity 1
             cr.execute(
@@ -141,8 +168,13 @@ def snacks():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    if request.method == "POST" and "voucher_code" in request.form:
-        apply_voucher(request.form.get("voucher_code"))
+    errormessage = None
+    if (
+        request.method == "POST"
+        and "voucher_code" in request.form
+        and not apply_voucher(request.form.get("voucher_code"))
+    ):
+        errormessage = "Invalid voucher code entered."
 
     # cost calculation
     total_cost = totalcost_calc(orders)
@@ -157,6 +189,7 @@ def snacks():
         voucher=voucher,
         discounted_total=discounted_total,
         sort_by=sort_by,
+        errormessage=errormessage,
     )
 
 
@@ -170,8 +203,13 @@ def drinks():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    if request.method == "POST" and "voucher_code" in request.form:
-        apply_voucher(request.form.get("voucher_code"))
+    errormessage = None
+    if (
+        request.method == "POST"
+        and "voucher_code" in request.form
+        and not apply_voucher(request.form.get("voucher_code"))
+    ):
+        errormessage = "Invalid voucher code entered."
 
     # cost calculation
     total_cost = totalcost_calc(orders)
@@ -186,6 +224,7 @@ def drinks():
         voucher=voucher,
         discounted_total=discounted_total,
         sort_by=sort_by,
+        errormessage=errormessage,
     )
 
 
@@ -197,8 +236,13 @@ def customize():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    if request.method == "POST" and "voucher_code" in request.form:
-        apply_voucher(request.form.get("voucher_code"))
+    errormessage = None
+    if (
+        request.method == "POST"
+        and "voucher_code" in request.form
+        and not apply_voucher(request.form.get("voucher_code"))
+    ):
+        errormessage = "Invalid voucher code entered."
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0
@@ -228,6 +272,7 @@ def customize():
         discounted_total=discounted_total,
         draft=draft,
         draft_total=draft_total,
+        errormessage=errormessage,
     )
 
 
@@ -302,23 +347,36 @@ def add_custom_to_cart():
     return redirect(url_for("customize"))
 
 
+# route setting to search.html
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    global orders
+    global orders, last_query, last_sort_by
     orders = order_connect()
 
-    if request.method == "POST" and "voucher_code" in request.form:
-        apply_voucher(request.form.get("voucher_code"))
+    errormessage = None
+    # triple condition for error message again..
+    if (
+        request.method == "POST"
+        and "voucher_code" in request.form
+        and not apply_voucher(request.form.get("voucher_code"))
+    ):
+        errormessage = "Invalid voucher code entered."
 
-    results = []  # clears (init) search results when page loaded with search
-    query = None  # also clears userinput upon refresh
-    sort_by = request.form.get("sort", "price-ascending")
-    if request.method == "POST" and "search_bar" in request.form:
-        query = (
+    # last search function
+    if (
+        request.method == "POST" and "search_bar" in request.form
+    ):  # triggers if search bar post req
+        last_query = (
             request.form.get("search_bar", "").strip().lower()
-        )  # userinput goes here
-        if query:
-            results = search_menu(query, sort_by)
+        )  # makes the user-input value the last_query so it is saved (no search history loss)
+        last_sort_by = request.form.get(
+            "sort", "price-ascending"
+        )  # default sorting (price ASC)
+
+    results = []
+    # triggers every time user makes a request (except fetching the page the first time)
+    if last_query is not None:
+        results = search_menu(last_query, last_sort_by)
 
     total_cost = totalcost_calc(orders)
     voucher = voucher_connect()
@@ -327,8 +385,26 @@ def search():
     return render_template(
         "search.html",
         results=results,
-        query=query,
-        sort_by=sort_by,
+        query=last_query,
+        sort_by=last_sort_by,
+        orders=orders,
+        total_cost=total_cost,
+        voucher=voucher,
+        discounted_total=discounted_total,
+        errormessage=errormessage,
+    )
+
+
+@app.route("/checkout")
+def checkout():
+    orders = order_connect()
+
+    total_cost = totalcost_calc(orders)
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
+
+    return render_template(
+        "checkout.html",
         orders=orders,
         total_cost=total_cost,
         voucher=voucher,

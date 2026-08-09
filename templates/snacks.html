@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Babo Bobo's Pizzaria | Snacks</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 	</head>
@@ -13,7 +14,7 @@
 					<img
 						src="{{ url_for('static', filename='images/search.png') }}"
 						alt=""
-						width="32px"
+						style="width: 32px"
 					>
 				</a>
 				<a href="{{ url_for('main') }}">PIZZAS</a>
@@ -24,7 +25,7 @@
 					<img
 						src="{{ url_for('static', filename='images/help.png') }}"
 						alt=""
-						width="32px"
+						style="width: 32px"
 					>
 				</a>
 			</nav>
@@ -34,8 +35,8 @@
 			<div class="parent-grid">
 				<!-- menu grid start -->
 				<div class="menu-section">
-					<h2>Snacks</h2>
-					<div id="line-divider"></div>
+					<h1>Snacks</h1>
+					<div class="line-divider"></div>
 					<form method="POST" name="sort_form">
 						<p>Sort by:</p>
 
@@ -63,11 +64,14 @@
 							<!-- displays the "$" + the snack's cost -->
 							<p style="margin-top: 0">{{ '$' + snack[2] }}</p>
 
-							<a href="{{ url_for('add_to_order', name=snack[1]) }}">
-								<button class="add-to-order">ADD TO ORDER</button>
-							</a>
+							<p style="margin-top: 0">★ {{ snack[4] }}</p>
+
+							<a href="{{ url_for('add_to_order', name=snack[1]) }}" class="add-to-order"
+								>ADD TO ORDER</a
+							>
 						</div>
 						{% endfor %}
+						<div class="smalldivider"></div>
 					</div>
 				</div>
 				<!-- menu grid end -->
@@ -75,14 +79,17 @@
 				<div class="order-section">
 					<div style="padding: 35px">
 						<h2>Apply Voucher</h2>
-						<div id="line-divider"></div>
+						<div class="line-divider"></div>
 						<form method="POST" name="voucher_code">
 							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
 							<button type="submit" name="voucher_code">SUBMIT</button>
 						</form>
+						{% if errormessage %}
+						<p style="color: var(--oh-no)">{{ errormessage }}</p>
+						{% endif %}
 
 						<h2>Order Summary</h2>
-						<div id="line-divider"></div>
+						<div class="line-divider"></div>
 						<!-- order box start -->
 						<div class="order-list">
 							<!-- uses a for loop to print everything that's in the db -->
@@ -157,9 +164,9 @@
 							* Maximum amount of a single item that can be ordered online is 100. If
 							you wish to order more, please call the store.
 						</p>
-						<form method="POST" name="checkout">
-							<button type="submit" name="checkout">CHECKOUT</button>
-						</form>
+						<a href="{{ url_for('checkout') }}" class="checkout-link checkout-btn"
+							>CHECKOUT</a
+						>
 					</div>
 				</div>
 				<!-- order grid end -->
@@ -172,7 +179,7 @@
 					<img
 						src="{{ url_for('static', filename='images/logo.png') }}"
 						alt="logo"
-						width="50%"
+						style="width: 50%"
 					>
 				</div>
 				<div>

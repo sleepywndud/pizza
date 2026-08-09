@@ -169,23 +169,29 @@ def search_menu(query, sort_by=None):
     # using multiple queries (from multiple tables) using UNION ALL
     # using this as a var because the code is too long to fit in the execute
     sql = f"""
-        SELECT id, name, price, imageURL, 'pizza/' AS folder FROM pizza WHERE name LIKE ?
+        SELECT id, name, price, imageURL, 'pizza/' AS folder, rating FROM pizza WHERE name LIKE ?
         UNION ALL
-        SELECT id, name, price, imageURL, 'snacks/' AS folder FROM snack WHERE name LIKE ?
+        SELECT id, name, price, imageURL, 'snacks/' AS folder, rating FROM snack WHERE name LIKE ?
         UNION ALL
-        SELECT id, name, price, imageURL, 'drinks/' AS folder FROM drinks WHERE name LIKE ?
+        SELECT id, name, price, imageURL, 'drinks/' AS folder, rating FROM drinks WHERE name LIKE ?
         ORDER BY {sort_column} {sort_direction}
     """
 
     conn = sqlite3.connect("database.db")
     cr = conn.cursor()
     cr.execute(sql, (pizza_query, snack_query, drinks_query))
-    rows = cr.fetchall()
+    rows = (
+        cr.fetchall()
+    )  # this 'rows' var holds ALL matching rows from the three tables.
     conn.close()
 
-    # each row is (id, name, price, imageURL, folder); combine folder+imageURL
-    # into one path so templates get (id, name, price, image_path)
+    # note that folder marks which table the row came from -- it's only used to make the image display
+    # without the folder variable, since the image's location in the directory varies,
+    # it will make image rendering difficult due to its path not being clear
+
+    # each row is (id, name, price, imageURL, folder, rating); combine
+    # folder+imageURL into one path so templates get (id, name, price, image_path, rating)
     results = []
-    for item_id, name, price, image, folder in rows:
-        results.append((item_id, name, price, folder + image))
+    for item_id, name, price, image, folder, rating in rows:
+        results.append((item_id, name, price, folder + image, rating))
     return results
