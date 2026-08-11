@@ -1,4 +1,6 @@
 # Ruff formatter configs.
+# This formatter changes the layout and styling of the code to increase readability.
+# This formatter does not interfere with functionality.
 
 [tool.ruff]
 ignore = ["F403", "F405", "F401", "E722", "F811", "I001"]

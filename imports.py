@@ -13,6 +13,7 @@ log.disabled = True
 app = Flask(__name__)
 
 
+# total cost calculator (in case of any prices that are in irrational numbers or never-ending decimals such as 0.333...)
 def totalcost_calc(orders):
     total_cost = 0.0
     for order in orders:
@@ -30,38 +31,52 @@ def menu_connect(table="pizza", sort_by=None):
     sort_column = "rating" if field == "rating" else "price"
     sort_direction = "DESC" if direction == "descending" else "ASC"
 
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute(f"SELECT * FROM {table} ORDER BY {sort_column} {sort_direction}")
+
+    if table == "ingredient":
+        # ingredient wasn't merged into menu_item -- still its own table
+        cr.execute(f"SELECT * FROM ingredient ORDER BY {sort_column} {sort_direction}")
+    else:
+        # pizza/snack/drinks are now one table (menu_item) with a category
+        # column, so "table" here is a category value, not a table name
+        cr.execute(
+            f"SELECT id, name, price, imageURL, rating FROM menu_item "
+            f"WHERE category = ? ORDER BY {sort_column} {sort_direction}",
+            (table,),
+        )
     data = cr.fetchall()
     conn.close()
 
     return data
 
 
+# connects to the cart db
 def order_connect():
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT * FROM cart")
+    cr.execute("SELECT id, name, price, quantity FROM cart")
     orders = cr.fetchall()
     conn.close()
 
     return orders
 
 
+# connects to the draft pizza db
 def draft_connect():
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT * FROM custom_pizza_draft")
+    cr.execute("SELECT id, name, price FROM custom_pizza_draft WHERE cart_id IS NULL")
     draft = cr.fetchall()
     conn.close()
 
     return draft
 
 
+# connects to the voucher db
 def voucher_connect():
     # returns the currently applied voucher as (code, discount_percentage), or None if none applied
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     # id = 1 checks if ANY data exists in the table
     cr.execute("SELECT code, discount_percentage FROM applied_voucher WHERE id = 1")
@@ -71,24 +86,22 @@ def voucher_connect():
     return voucher
 
 
+# function to apply voucher to the current price
 def apply_voucher(code):
-    # looks up the code in database.db and stores it as the applied voucher in order.db
+    # looks up the code and stores it as the applied voucher
     # returns True if the code was valid and got applied, False otherwise
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute("SELECT discount_percentage FROM voucher WHERE code = ?", (code,))
     voucher_data = cr.fetchone()
-    conn.close()
 
     #  catches all non-existing voucher codes and returns nothing (False)
     if voucher_data is None:
+        conn.close()
         return False  # could add error msg in future for invalid voucher codes
 
     # gets the data -- [0] used since it's a tuple
     discount_percentage = voucher_data[0]
-
-    conn = sqlite3.connect("order.db")
-    cr = conn.cursor()
 
     # replaces existing voucher that's applied with new voucher
     cr.execute("DELETE FROM applied_voucher WHERE id = 1")
@@ -103,14 +116,18 @@ def apply_voucher(code):
     return True
 
 
+# function to remove the applied voucher
 def remove_voucher():
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("DELETE FROM applied_voucher WHERE id = 1")
+    cr.execute(
+        "DELETE FROM applied_voucher WHERE id = 1"
+    )  # uses id=1 to remove any existing [1] vouchers
     conn.commit()
     conn.close()
 
 
+# function for applying discount and rounding to 2dp
 def apply_discount(total_cost, voucher):
     # applies the voucher discount % to total cost then 2dp rounding
     if voucher is None:
@@ -129,7 +146,7 @@ def search_menu(query, sort_by=None):
     field, _, direction = sort_by.partition("-")
 
     # if the query names a whole category (e.g. "drinks" or "snack"), match
-    # every row in that table instead of filtering by name
+    # every row in that category instead of filtering by name
 
     # table names and their aliases; NOTE: might be better if changed in the fture
     table_names = {
@@ -166,26 +183,28 @@ def search_menu(query, sort_by=None):
     else:
         sort_direction = "ASC"
 
-    # using multiple queries (from multiple tables) using UNION ALL
+    # pizza/snack/drinks used to be 3 separate tables joined with UNION ALL.
+    # now they're all rows in menu_item, so we UNION ALL the same category
+    # 3 times instead -- same shape as before, just querying one table
     # using this as a var because the code is too long to fit in the execute
     sql = f"""
-        SELECT id, name, price, imageURL, 'pizza/' AS folder, rating FROM pizza WHERE name LIKE ?
+        SELECT id, name, price, imageURL, 'pizza/' AS folder, rating FROM menu_item WHERE category = 'pizza' AND name LIKE ?
         UNION ALL
-        SELECT id, name, price, imageURL, 'snacks/' AS folder, rating FROM snack WHERE name LIKE ?
+        SELECT id, name, price, imageURL, 'snacks/' AS folder, rating FROM menu_item WHERE category = 'snack' AND name LIKE ?
         UNION ALL
-        SELECT id, name, price, imageURL, 'drinks/' AS folder, rating FROM drinks WHERE name LIKE ?
+        SELECT id, name, price, imageURL, 'drinks/' AS folder, rating FROM menu_item WHERE category = 'drinks' AND name LIKE ?
         ORDER BY {sort_column} {sort_direction}
     """
 
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute(sql, (pizza_query, snack_query, drinks_query))
     rows = (
         cr.fetchall()
-    )  # this 'rows' var holds ALL matching rows from the three tables.
+    )  # this 'rows' var holds ALL matching rows from the three categories
     conn.close()
 
-    # note that folder marks which table the row came from -- it's only used to make the image display
+    # note that folder marks which category the row came from -- it's only used to make the image display
     # without the folder variable, since the image's location in the directory varies,
     # it will make image rendering difficult due to its path not being clear
 

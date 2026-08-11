@@ -46,12 +46,14 @@ def main():
     )
 
 
+# route to remove the applied voucher
 @app.route("/remove_voucher")
 def remove_voucher_route():
     remove_voucher()
     return redirect(request.referrer or url_for("main"))
 
 
+# route to change the quantity of the item
 @app.route("/update_quantity/<int:item_id>", methods=["POST"])
 def update_quantity(item_id):
     # fetch quantity from the form in index.html
@@ -64,7 +66,7 @@ def update_quantity(item_id):
         # right now it basically returns to the state before the invalid input
         return redirect(request.referrer or url_for("main"))
 
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
 
     if (
@@ -74,6 +76,10 @@ def update_quantity(item_id):
         cr.execute("UPDATE cart SET quantity = ? WHERE id = ?", (new_quantity, item_id))
     elif new_quantity == 0:
         # remove item if quantity is zero
+        # if this was a custom pizza, its ingredients in custom_pizza_draft
+        # are linked via cart_id -- delete those first so none are left
+        # pointing at a cart row that's about to be deleted
+        cr.execute("DELETE FROM custom_pizza_draft WHERE cart_id = ?", (item_id,))
         cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
     else:
         print(
@@ -86,10 +92,15 @@ def update_quantity(item_id):
     return redirect(request.referrer or url_for("main"))
 
 
+# route to remove an item from the cart
 @app.route("/remove_from_cart/<int:item_id>")
 def remove_from_cart(item_id):
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
+    # if this was a custom pizza, its ingredients in custom_pizza_draft are
+    # linked via cart_id -- delete those first so none are left pointing at
+    # a cart row that's about to be deleted
+    cr.execute("DELETE FROM custom_pizza_draft WHERE cart_id = ?", (item_id,))
     # deletes the item specified
     cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
     conn.commit()
@@ -98,34 +109,23 @@ def remove_from_cart(item_id):
     return redirect(request.referrer or url_for("main"))
 
 
+# route to add an item to the cart
 @app.route("/add_to_order/<name>")
 def add_to_order(name):
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
 
-    # check pizza table
-    cr.execute("SELECT price FROM pizza WHERE name = ?", (name,))
+    # pizza/snack/drinks are now one table (menu_item), so one lookup covers
+    # all three instead of checking pizza, then snack, then drinks
+    cr.execute("SELECT id, price FROM menu_item WHERE name = ?", (name,))
     item_data = cr.fetchone()
-
-    # if not in pizza, check snack table
-    if item_data is None:  # if not in pizza table
-        cr.execute("SELECT price FROM snack WHERE name = ?", (name,))
-        item_data = cr.fetchone()  # set item_data as the price of the item
-
-    # if not in snack, check drinks table
-    if item_data is None:  # if not in drinks table
-        cr.execute("SELECT price FROM drinks WHERE name = ?", (name,))
-        item_data = cr.fetchone()
-
-    conn.close()
 
     # updates quantity in cart table if item is in menu
     if item_data is not None:
-        price = item_data[0]  # price
+        item_id = item_data[0]  # id -- needed for the new cart.item_id foreign key
+        price = item_data[1]  # price
 
-        conn = sqlite3.connect("order.db")
-        cr = conn.cursor()
-        # checks if item is already in order.db
+        # checks if item is already in cart
         cr.execute("SELECT quantity FROM cart WHERE name = ?", (name,))
         item = cr.fetchone()
 
@@ -147,9 +147,10 @@ def add_to_order(name):
             # if quantity is too high, we just don't update anything
         else:
             # if item doesn't exist, then add the row to the db with quantity 1
+            # item_id links this row to its menu_item row (the new foreign key)
             cr.execute(
-                "INSERT INTO cart (name, price, quantity) VALUES (?, ?, 1)",
-                (name, price),
+                "INSERT INTO cart (item_id, name, price, quantity) VALUES (?, ?, ?, 1)",
+                (item_id, name, price),
             )
         #  [] =
         conn.commit()
@@ -276,33 +277,36 @@ def customize():
     )
 
 
+# route that adds the ingredient to the custom_pizza_draft db
 @app.route("/ingredient/<name>")
 def ingredient(name):
-    # below 5 lines could be refactored into a function..
-    conn = sqlite3.connect("database.db")
+    # below lines could be refactored into a function..
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT price FROM ingredient WHERE name = ?", (name,))
+    cr.execute("SELECT id, price FROM ingredient WHERE name = ?", (name,))
     item_data = cr.fetchone()
-    conn.close()
 
     if item_data is not None:
-        price = item_data[0]
+        ingredient_id = item_data[
+            0
+        ]  # id -- needed for the new ingredient_id foreign key
+        price = item_data[1]
 
-        conn = sqlite3.connect("order.db")
-        cr = conn.cursor()
+        # ingredient_id links this row to its ingredient row (the new foreign key)
         cr.execute(
-            "INSERT INTO custom_pizza_draft (ingredient, price) VALUES (?, ?)",
-            (name, price),
+            "INSERT INTO custom_pizza_draft (ingredient_id, name, price) VALUES (?, ?, ?)",
+            (ingredient_id, name, price),
         )
         conn.commit()
-        conn.close()
 
+    conn.close()
     return redirect(url_for("customize"))
 
 
+# route thta removes the ingredient from the custom_pizza_draft db
 @app.route("/remove_ingredient/<item_id>")
 def remove_ingredient(item_id):
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute(
         "DELETE FROM custom_pizza_draft WHERE id = ?", (item_id,)
@@ -313,11 +317,13 @@ def remove_ingredient(item_id):
     return redirect(url_for("customize"))
 
 
+# route to index html -- AKA the introduction (or help) page
 @app.route("/")
 def user_manual():
     return render_template("index.html")
 
 
+# route to add a custom pizza (with ingredients) to the cart
 @app.route("/add_custom_to_cart")
 def add_custom_to_cart():
     draft = draft_connect()
@@ -331,16 +337,20 @@ def add_custom_to_cart():
         total += float(item[2])
     total = round(total, 2)
 
-    conn = sqlite3.connect("order.db")
+    conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute(
         "INSERT INTO cart (name, price, quantity) VALUES ('Custom Pizza', ?, 1)",
         (str(total),),
-    )  # add custom pizza to cart
-    # 'total' is the total cost of the custom pizza (ingredient + the base price)
+    )  # add custom pizza to cart -- item_id stays NULL since it's not one single menu_item
+    cart_id = cr.lastrowid  # id of the cart row we just inserted
+
+    # link the staged ingredient rows to this cart row instead of deleting
+    # them, so the FK from custom_pizza_draft.cart_id -> cart.id stays valid
+    # and the preview clears (customize.html only shows rows where cart_id IS NULL)
     cr.execute(
-        "DELETE FROM custom_pizza_draft"
-    )  # so that pizza preview is cleared after adding to cart
+        "UPDATE custom_pizza_draft SET cart_id = ? WHERE cart_id IS NULL", (cart_id,)
+    )
     conn.commit()
     conn.close()
 
@@ -395,6 +405,7 @@ def search():
     )
 
 
+# route to the checkout page
 @app.route("/checkout")
 def checkout():
     orders = order_connect()

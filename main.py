@@ -17,12 +17,13 @@ Project Due on the 14th of August, 2026.
 from imports import *
 from routes import *
 
-conn = sqlite3.connect("order.db")
+conn = sqlite3.connect("pizza.db")
 cr = conn.cursor()
 
-# empties the table data in order.db when program is ran
-cr.execute("DELETE FROM cart")
+# empties the cart/draft/voucher tables when program is ran
+# (custom_pizza_draft is deleted first since its rows link to cart)
 cr.execute("DELETE FROM custom_pizza_draft")
+cr.execute("DELETE FROM cart")
 cr.execute("DELETE FROM applied_voucher")
 conn.commit()
 conn.close()
