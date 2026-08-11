@@ -137,6 +137,7 @@ def apply_discount(total_cost, voucher):
     return round(discounted, 2)
 
 
+# function to search ALL the items (from all categories)
 def search_menu(query, sort_by=None):
     like_query = f"%{query}%"
 
@@ -148,13 +149,14 @@ def search_menu(query, sort_by=None):
     # if the query names a whole category (e.g. "drinks" or "snack"), match
     # every row in that category instead of filtering by name
 
-    # table names and their aliases; NOTE: might be better if changed in the fture
+    # [FIX After Bobo's trial]:
+    # table names and their aliases
     table_names = {
         "pizza": "pizza",
         "snack": "snack",
         "snacks": "snack",
         "drinks": "drinks",
-    }
+    }  # this prevents users from searching "pizza", and getting no results
     category_table = table_names.get(query)
 
     #  bunch of ifs to determine sorting configs

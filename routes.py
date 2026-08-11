@@ -61,7 +61,6 @@ def update_quantity(item_id):
         new_quantity = int(request.form.get("quantity"))
     except ValueError:
         # redirect back if input is invalid (for valueerror)
-        # NOTE: maybe alert user somehow if invalid input ???
 
         # right now it basically returns to the state before the invalid input
         return redirect(request.referrer or url_for("main"))

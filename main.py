@@ -17,6 +17,7 @@ Project Due on the 14th of August, 2026.
 from imports import *
 from routes import *
 
+# connect
 conn = sqlite3.connect("pizza.db")
 cr = conn.cursor()
 
@@ -34,9 +35,9 @@ last_sort_by = ""
 
 # RUN!
 if __name__ == "__main__":
-    # test loggings NOTE: REMOVE this before submitting!!!
-    print(Fore.GREEN + "\n[+] Program reloaded with latest change!" + Fore.RESET)
-    print(Fore.GREEN + "[+] Visit http://localhost:2222/ for program! \n" + Fore.RESET)
+    # run at port 2222
+    app.run(
+        debug=True, port=2222
+    )  # debug=True makes it so that file updates are immediately reloaded and shown
 
-    # run at localhost:2222
-    app.run(debug=True, port=2222)
+# Please visit [http://localhost:2222/] after you run this file!
