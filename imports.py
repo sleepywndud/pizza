@@ -67,7 +67,7 @@ def draft_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute(
-        "SELECT draft_id, name, price FROM custom_pizza_draft WHERE cart_id IS NULL"
+        "SELECT draft_id, name, price FROM custom_pizza_draft WHERE item_id IS NULL"
     )
     draft = cr.fetchall()
     conn.close()
@@ -112,7 +112,7 @@ def apply_voucher(code):
     # replaces existing voucher that's applied with new voucher
     cr.execute("DELETE FROM applied_voucher WHERE voucher_id = 1")
     cr.execute(
-        "INSERT INTO applied_voucher (voucher_id, code, discount_percentage) VALUES (1, ?, ?)",
+        "INSERT INTO applied_voucher (voucher_id, voucher_code, discount_percentage) VALUES (1, ?, ?)",
         (code, discount_percentage),
     )
 

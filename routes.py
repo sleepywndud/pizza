@@ -78,8 +78,8 @@ def update_quantity(item_id):
     elif new_quantity == 0:
         # remove item if quantity is zero
         # if this was a custom pizza, its ingredients in custom_pizza_draft
-        # are linked via cart_id -- delete those first so none are left
-        cr.execute("DELETE FROM custom_pizza_draft WHERE cart_id = ?", (item_id,))
+        # are linked via item_id -- delete those first so none are left
+        cr.execute("DELETE FROM custom_pizza_draft WHERE item_id = ?", (item_id,))
         cr.execute("DELETE FROM cart WHERE cart_id = ?", (item_id,))
     else:
         print(
@@ -346,10 +346,10 @@ def add_custom_to_cart():
     cart_id = cr.lastrowid  # id of the cart row we just inserted
 
     # link the staged ingredient rows to this cart row instead of deleting
-    # them, so the FK from custom_pizza_draft.cart_id -> cart.id stays valid
-    # and the preview clears (customize.html only shows rows where cart_id IS NULL)
+    # them, so the FK from custom_pizza_draft.item_id -> cart.cart_id stays valid
+    # and the preview clears (customize.html only shows rows where item_id IS NULL)
     cr.execute(
-        "UPDATE custom_pizza_draft SET cart_id = ? WHERE cart_id IS NULL", (cart_id,)
+        "UPDATE custom_pizza_draft SET item_id = ? WHERE item_id IS NULL", (cart_id,)
     )
     conn.commit()
     conn.close()
