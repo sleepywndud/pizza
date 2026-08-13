@@ -46,7 +46,8 @@
 								<div class="ingredient-box item-ingredient">
 									<div>
 										<b style="margin-bottom: 0">{{ ingredient[1] }}</b>
-										<p style="margin-top: 0">{{"+ " '$' + ingredient[2] }}</p>
+										<!-- ingredient[2] is a number, not text, so we use '~' instead of '+' to join it onto the '$' -->
+										<p style="margin-top: 0">{{ "+ $" ~ ingredient[2] }}</p>
 									</div>
 									<a
 										href="{{ url_for('ingredient', name=ingredient[1]) }}"

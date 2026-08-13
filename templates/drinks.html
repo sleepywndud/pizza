@@ -62,7 +62,8 @@
 							>
 							<p style="margin-bottom: 0">{{ drink[1] }}</p>
 							<!-- displays the "$" + the drink's cost -->
-							<p style="margin-top: 0">{{ '$' + drink[2] }}</p>
+							<!-- drink[2] is a number, not text, so we use '~' instead of '+' to join it onto the '$' -->
+							<p style="margin-top: 0">{{ '$' ~ drink[2] }}</p>
 
 							<p style="margin-top: 0">★ {{ drink[4] }}</p>
 

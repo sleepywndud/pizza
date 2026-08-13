@@ -41,7 +41,7 @@ def menu_connect(table="pizza", sort_by=None):
         # pizza/snack/drinks are now one table (menu_item) with a category
         # column, so "table" here is a category value, not a table name
         cr.execute(
-            f"SELECT id, name, price, imageURL, rating FROM menu_item "
+            f"SELECT item_id, name, price, imageURL, rating FROM menu_item "
             f"WHERE category = ? ORDER BY {sort_column} {sort_direction}",
             (table,),
         )
@@ -55,7 +55,7 @@ def menu_connect(table="pizza", sort_by=None):
 def order_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT id, name, price, quantity FROM cart")
+    cr.execute("SELECT cart_id, name, price, quantity FROM cart")
     orders = cr.fetchall()
     conn.close()
 
@@ -66,7 +66,9 @@ def order_connect():
 def draft_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT id, name, price FROM custom_pizza_draft WHERE cart_id IS NULL")
+    cr.execute(
+        "SELECT draft_id, name, price FROM custom_pizza_draft WHERE cart_id IS NULL"
+    )
     draft = cr.fetchall()
     conn.close()
 
@@ -79,7 +81,9 @@ def voucher_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     # id = 1 checks if ANY data exists in the table
-    cr.execute("SELECT code, discount_percentage FROM applied_voucher WHERE id = 1")
+    cr.execute(
+        "SELECT voucher_code, discount_percentage FROM applied_voucher WHERE voucher_id = 1"
+    )
     voucher = cr.fetchone()
     conn.close()
 
@@ -92,7 +96,9 @@ def apply_voucher(code):
     # returns True if the code was valid and got applied, False otherwise
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT discount_percentage FROM voucher WHERE code = ?", (code,))
+    cr.execute(
+        "SELECT discount_percentage FROM voucher WHERE voucher_code = ?", (code,)
+    )
     voucher_data = cr.fetchone()
 
     #  catches all non-existing voucher codes and returns nothing (False)
@@ -104,9 +110,9 @@ def apply_voucher(code):
     discount_percentage = voucher_data[0]
 
     # replaces existing voucher that's applied with new voucher
-    cr.execute("DELETE FROM applied_voucher WHERE id = 1")
+    cr.execute("DELETE FROM applied_voucher WHERE voucher_id = 1")
     cr.execute(
-        "INSERT INTO applied_voucher (id, code, discount_percentage) VALUES (1, ?, ?)",
+        "INSERT INTO applied_voucher (voucher_id, code, discount_percentage) VALUES (1, ?, ?)",
         (code, discount_percentage),
     )
 
@@ -121,7 +127,7 @@ def remove_voucher():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute(
-        "DELETE FROM applied_voucher WHERE id = 1"
+        "DELETE FROM applied_voucher WHERE voucher_id = 1"
     )  # uses id=1 to remove any existing [1] vouchers
     conn.commit()
     conn.close()
@@ -190,11 +196,11 @@ def search_menu(query, sort_by=None):
     # 3 times instead -- same shape as before, just querying one table
     # using this as a var because the code is too long to fit in the execute
     sql = f"""
-        SELECT id, name, price, imageURL, 'pizza/' AS folder, rating FROM menu_item WHERE category = 'pizza' AND name LIKE ?
+        SELECT item_id, name, price, imageURL, 'pizza/' AS folder, rating FROM menu_item WHERE category = 'pizza' AND name LIKE ?
         UNION ALL
-        SELECT id, name, price, imageURL, 'snacks/' AS folder, rating FROM menu_item WHERE category = 'snack' AND name LIKE ?
+        SELECT item_id, name, price, imageURL, 'snacks/' AS folder, rating FROM menu_item WHERE category = 'snack' AND name LIKE ?
         UNION ALL
-        SELECT id, name, price, imageURL, 'drinks/' AS folder, rating FROM menu_item WHERE category = 'drinks' AND name LIKE ?
+        SELECT item_id, name, price, imageURL, 'drinks/' AS folder, rating FROM menu_item WHERE category = 'drinks' AND name LIKE ?
         ORDER BY {sort_column} {sort_direction}
     """
 

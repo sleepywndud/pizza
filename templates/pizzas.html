@@ -62,7 +62,8 @@
 							>
 							<p style="margin-bottom: 0">{{ pizza[1] }}</p>
 							<!-- displays the "$" + the pizza's cost -->
-							<p style="margin-top: 0">{{ '$' + pizza[2] }}</p>
+							<!-- pizza[2] is a number, not text, so we use '~' instead of '+' to join it onto the '$' -->
+							<p style="margin-top: 0">{{ '$' ~ pizza[2] }}</p>
 
 							<!-- <p style="margin-top: 0">Rating: {{ pizza[4] }} / 5</p> -->
 							<p style="margin-top: 0">★ {{ pizza[4] }}</p>

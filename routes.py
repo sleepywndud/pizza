@@ -72,14 +72,15 @@ def update_quantity(item_id):
         0 < new_quantity <= 100
     ):  # quantity must be between 1 and 100 -- zero will delete the item
         # update quantity in the database to the corresponding itemid
-        cr.execute("UPDATE cart SET quantity = ? WHERE id = ?", (new_quantity, item_id))
+        cr.execute(
+            "UPDATE cart SET quantity = ? WHERE cart_id = ?", (new_quantity, item_id)
+        )
     elif new_quantity == 0:
         # remove item if quantity is zero
         # if this was a custom pizza, its ingredients in custom_pizza_draft
         # are linked via cart_id -- delete those first so none are left
-        # pointing at a cart row that's about to be deleted
         cr.execute("DELETE FROM custom_pizza_draft WHERE cart_id = ?", (item_id,))
-        cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
+        cr.execute("DELETE FROM cart WHERE cart_id = ?", (item_id,))
     else:
         print(
             "Invalid Quantity Entered."
@@ -99,9 +100,9 @@ def remove_from_cart(item_id):
     # if this was a custom pizza, its ingredients in custom_pizza_draft are
     # linked via cart_id -- delete those first so none are left pointing at
     # a cart row that's about to be deleted
-    cr.execute("DELETE FROM custom_pizza_draft WHERE cart_id = ?", (item_id,))
+    cr.execute("DELETE FROM custom_pizza_draft WHERE item_id = ?", (item_id,))
     # deletes the item specified
-    cr.execute("DELETE FROM cart WHERE id = ?", (item_id,))
+    cr.execute("DELETE FROM cart WHERE cart_id = ?", (item_id,))
     conn.commit()
     conn.close()
 
@@ -116,7 +117,7 @@ def add_to_order(name):
 
     # pizza/snack/drinks are now one table (menu_item), so one lookup covers
     # all three instead of checking pizza, then snack, then drinks
-    cr.execute("SELECT id, price FROM menu_item WHERE name = ?", (name,))
+    cr.execute("SELECT item_id, price FROM menu_item WHERE name = ?", (name,))
     item_data = cr.fetchone()
 
     # updates quantity in cart table if item is in menu
@@ -168,6 +169,7 @@ def snacks():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
+    # triple condition to see if it's invalid voucher code
     errormessage = None
     if (
         request.method == "POST"
@@ -203,6 +205,7 @@ def drinks():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
+    # triple condition see if it's invalid voucher code
     errormessage = None
     if (
         request.method == "POST"
@@ -282,13 +285,11 @@ def ingredient(name):
     # below lines could be refactored into a function..
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT id, price FROM ingredient WHERE name = ?", (name,))
+    cr.execute("SELECT ingredient_id, price FROM ingredient WHERE name = ?", (name,))
     item_data = cr.fetchone()
 
     if item_data is not None:
-        ingredient_id = item_data[
-            0
-        ]  # id -- needed for the new ingredient_id foreign key
+        ingredient_id = item_data[0]  # id; needed for the new ingredient_id foreign key
         price = item_data[1]
 
         # ingredient_id links this row to its ingredient row (the new foreign key)
@@ -308,7 +309,7 @@ def remove_ingredient(item_id):
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute(
-        "DELETE FROM custom_pizza_draft WHERE id = ?", (item_id,)
+        "DELETE FROM custom_pizza_draft WHERE draft_id = ?", (item_id,)
     )  # removes ingredient id from db
     conn.commit()
     conn.close()
