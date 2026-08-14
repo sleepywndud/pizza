@@ -55,10 +55,16 @@ def menu_connect(table="pizza", sort_by=None):
 def order_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    cr.execute("SELECT cart_id, name, price, quantity FROM cart")
+    # item_id is a FK to menu_item so JOIN
+    cr.execute(
+        """
+        SELECT cart.cart_id, cart.name, menu_item.price, cart.quantity
+        FROM cart
+        JOIN menu_item ON cart.item_id = menu_item.item_id
+        """
+    )
     orders = cr.fetchall()
     conn.close()
-
     return orders
 
 
@@ -66,8 +72,14 @@ def order_connect():
 def draft_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
+    # ingredient_id is a FK to ingredient so JOIN
     cr.execute(
-        "SELECT draft_id, name, price FROM custom_pizza_draft WHERE item_id IS NULL"
+        """
+        SELECT custom_pizza_draft.draft_id, ingredient.name, ingredient.price
+        FROM custom_pizza_draft
+        JOIN ingredient ON custom_pizza_draft.ingredient_id = ingredient.ingredient_id
+        WHERE custom_pizza_draft.item_id IS NULL
+        """
     )
     draft = cr.fetchall()
     conn.close()
