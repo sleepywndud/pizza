@@ -10,6 +10,7 @@
 		<!-- header (navbar) start -->
 		<header>
 			<nav class="navbar">
+				<!-- search -->
 				<a href="{{ url_for('search') }}">
 					<img
 						src="{{ url_for('static', filename='images/search.png') }}"
@@ -17,10 +18,12 @@
 						style="width: 32px"
 					>
 				</a>
+				<!-- links to items -->
 				<a href="{{ url_for('main') }}">PIZZAS</a>
 				<a href="{{ url_for('snacks') }}">SNACKS</a>
 				<a href="{{ url_for('drinks') }}">DRINKS</a>
 				<a href="{{ url_for('customize') }}">CUSTOMIZE PIZZA</a>
+				<!-- help -->
 				<a href="{{ url_for('user_manual') }}" class="nav-help">
 					<img
 						src="{{ url_for('static', filename='images/help.png') }}"
@@ -73,6 +76,7 @@
 							>
 							<p style="margin-bottom: 0">{{ item[1] }}</p>
 							<!-- item[2] is a number, not text, so we use '~' instead of '+' to join it onto the '$' -->
+							<!-- using + crashed the program since '$' is a string, whereas item[2] is an integer (inconsistent types) -->
 							<p style="margin-top: 0">{{ '$' ~ item[2] }}</p>
 
 							<p style="margin-top: 0">★ {{ item[4] }}</p>
@@ -93,10 +97,13 @@
 					<div style="padding: 35px">
 						<h2>Apply Voucher</h2>
 						<div class="line-divider"></div>
+						<!-- voucher code entering section -->
 						<form method="POST" name="voucher_code">
 							<input type="text" name="voucher_code" placeholder="ENTER VOUCHER CODE">
+							<!-- voucher code submit button -->
 							<button type="submit" name="voucher_code">SUBMIT</button>
 						</form>
+						<!-- red error message for invalid voucher codes -->
 						{% if errormessage %}
 						<p style="color: var(--oh-no)">{{ errormessage }}</p>
 						{% endif %}
@@ -145,6 +152,7 @@
 							</div>
 							<div class="order-item">
 								<div class="grid_order-item">
+									<!-- voucher[1] is the discount percentage -->
 									<p style="text-align: left; white-space: nowrap">
 										Discount ({{ voucher[1] }}%)
 									</p>
@@ -188,6 +196,7 @@
 		<!-- footer start -->
 		<footer>
 			<div class="grid_3-1_1to1ratio">
+				<!-- footer logo by Lucas Kang -->
 				<div style="text-align: center">
 					<img
 						src="{{ url_for('static', filename='images/logo.png') }}"
