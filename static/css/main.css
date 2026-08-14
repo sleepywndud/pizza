@@ -16,6 +16,7 @@
 	--oh-no: oklch(62.793% 0.25768 29.223); /* #ff0000 */
 }
 
+/* page background/text defaults */
 body {
 	background-color: var(--white-main);
 	color: var(--grey-dark);
@@ -81,6 +82,7 @@ h2 {
 	margin-left: auto;
 }
 
+/* footer bar at the bottom of every page */
 footer {
 	background: var(--accent-main);
 	margin: 0;
@@ -92,10 +94,12 @@ footer a {
 	color: var(--white-main);
 }
 
+/* left column: the menu item grid */
 .menu-section {
 	margin: 32px;
 }
 
+/* right column: voucher + order summary */
 .order-section {
 	background-color: var(--grey-light1);
 }
@@ -119,8 +123,8 @@ footer a {
 	align-items: center;
 }
 
+/* 2 columns, 3:1 ratio */
 .grid_1-2_1to3ratio {
-	display: grid;
 	display: grid;
 	grid-template-columns: 3fr 1fr;
 	grid-template-rows: 1fr;
@@ -154,6 +158,7 @@ footer a {
 	align-items: center;
 }
 
+/* used for each row in the order summary: quantity/name/price + remove button */
 .grid_order-item {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr) auto;
@@ -162,6 +167,7 @@ footer a {
 	align-items: center;
 }
 
+/* 2 columns, 1:3 ratio */
 .grid_3-1_1to3ratio {
 	display: grid;
 	grid-template-columns: 1fr 3fr;
@@ -171,6 +177,7 @@ footer a {
 	align-items: start;
 }
 
+/* menu item card (used for pizzas/snacks/drinks/search results) */
 .item-pizza {
 	width: 100%;
 	min-height: 450px;
@@ -206,6 +213,7 @@ footer a {
 	margin: 0.5rem;
 }
 
+/* the pill-shaped "ADD TO ORDER" button */
 .add-to-order {
 	display: flex;
 	align-items: center;
@@ -231,6 +239,7 @@ footer a {
 	background-color: var(--accent-sub);
 }
 
+/* the round "+" button used on the customize page */
 .add-ingredient-to-order {
 	display: flex;
 	align-items: center;
@@ -254,6 +263,7 @@ footer a {
 	background-color: var(--accent-sub);
 }
 
+/* voucher code input + submit button */
 form[name='voucher_code'] {
 	text-align: right;
 }
@@ -291,6 +301,7 @@ form button[name='voucher_code']:hover {
 	background-color: var(--accent-sub);
 }
 
+/* custom pizza preview box on the customize page */
 .preview-box {
 	background-color: var(--grey-light2);
 	border-radius: 25px;
@@ -300,6 +311,7 @@ form button[name='voucher_code']:hover {
 	overflow-y: auto;
 }
 
+/* one row inside the preview box */
 .preview-item {
 	display: grid;
 	grid-template-columns: 1fr 1fr auto auto;
@@ -308,6 +320,7 @@ form button[name='voucher_code']:hover {
 	margin-bottom: 0.25rem;
 }
 
+/* scrollable list of ingredients to pick from */
 .ingredient-list {
 	display: flex;
 	flex-direction: column;
@@ -317,6 +330,7 @@ form button[name='voucher_code']:hover {
 	box-sizing: border-box;
 }
 
+/* one ingredient row inside the ingredient list */
 .ingredient-box {
 	background-color: var(--grey-light2);
 	border-radius: 25px;
@@ -328,6 +342,7 @@ form button[name='voucher_code']:hover {
 	justify-content: space-between;
 }
 
+/* scrollable order summary box (cart contents) */
 .order-list {
 	background-color: var(--grey-light2);
 	border-radius: 25px;
@@ -350,6 +365,7 @@ form button[name='voucher_code']:hover {
 	align-items: start;
 }
 
+/* the grey boxes on the checkout page (item list + summary) */
 .checkout-box {
 	background-color: var(--grey-light2);
 	border-radius: 25px;
@@ -360,6 +376,7 @@ form button[name='voucher_code']:hover {
 	overflow-y: auto;
 }
 
+/* item list grid inside the checkout box: name, quantity, price, remove button */
 .checkout-items {
 	display: grid;
 	grid-template-columns: 1fr auto auto auto;
@@ -387,6 +404,7 @@ form button[name='voucher_code']:hover {
 	height: 100%;
 }
 
+/* subtotal/discount rows in the checkout summary */
 .checkout-summary-rows {
 	display: grid;
 	grid-template-columns: 1fr auto auto;
@@ -395,12 +413,14 @@ form button[name='voucher_code']:hover {
 	align-items: center;
 }
 
+/* the "TOTAL" row in the checkout summary */
 .checkout-total-row {
 	display: grid;
 	grid-template-columns: 1fr auto;
 	align-items: center;
 }
 
+/* row holding the "CONFIRM ORDER" button */
 .checkout-confirm-row {
 	display: grid;
 	grid-template-columns: 1fr auto;
@@ -408,6 +428,7 @@ form button[name='voucher_code']:hover {
 	margin-top: 16px;
 }
 
+/* the "CONFIRM ORDER" button */
 .confirm-order-btn {
 	width: 160px;
 	height: 40px;
@@ -432,6 +453,7 @@ input[type='number'] {
 	width: 70%;
 }
 
+/* right-aligns the checkout link/button */
 a.checkout-link {
 	display: block;
 	text-align: right;
@@ -450,6 +472,7 @@ form input[name='checkout'] {
 	text-align: center;
 }
 
+/* the pill-shaped "CHECKOUT" button */
 a.checkout-btn {
 	display: inline-block;
 	width: 120px;
@@ -472,10 +495,12 @@ a.checkout-btn:hover {
 	background-color: var(--accent-sub);
 }
 
+/* the "Base Dough" line in the custom pizza preview */
 .draft-base-line {
 	color: var(--grey-dark);
 }
 
+/* 'x' button to remove an ingredient from the custom pizza preview */
 .draft-remove-btn {
 	color: var(--accent-main);
 	font-weight: bold;
@@ -483,6 +508,7 @@ a.checkout-btn:hover {
 	margin-left: 8px;
 }
 
+/* 'x' button to remove an item from the cart */
 .order-item-remove-btn {
 	color: var(--accent-main);
 	font-weight: bold;
@@ -490,10 +516,12 @@ a.checkout-btn:hover {
 	margin-left: 8px;
 }
 
+/* wraps page content on pages without the two-column layout (index/checkout) */
 .parent-container {
 	margin: 30px;
 }
 
+/* search bar input + submit button */
 form[name='search_bar'] {
 	text-align: right;
 }
@@ -531,6 +559,7 @@ form button[name='search_bar']:hover {
 	background-color: var(--accent-sub);
 }
 
+/* the price/rating sort dropdown */
 select[name='sort'] {
 	width: 250px;
 	height: 35px;
@@ -554,6 +583,7 @@ select[name='sort']:hover {
 	margin-top: 0;
 }
 
+/* the "Start by clicking the links above" text on the intro page navbar */
 .introduction {
 	color: var(--white-main);
 }
