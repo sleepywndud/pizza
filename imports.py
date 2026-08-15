@@ -175,6 +175,16 @@ def apply_discount(total_cost, voucher):
     return round(discounted, 2)
 
 
+# runs the full cost calculation used by every route: cart total, the
+# currently applied voucher, and the total after discount
+# returns (total_cost, voucher, discounted_total)
+def calculate_totals(orders):
+    total_cost = totalcost_calc(orders)
+    voucher = voucher_connect()
+    discounted_total = apply_discount(total_cost, voucher)
+    return total_cost, voucher, discounted_total
+
+
 # function to search ALL the items (from all categories)
 # returns a list of (item_id, name, price, image_path, rating) tuples
 def search_menu(query, sort_by=None):

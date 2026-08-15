@@ -17,9 +17,7 @@ def main():
     errormessage = check_voucher_form()
 
     # calculations involving total price and discounted price
-    total_cost = totalcost_calc(orders)
-    voucher = voucher_connect()
-    discounted_total = apply_discount(total_cost, voucher)
+    total_cost, voucher, discounted_total = calculate_totals(orders)
 
     return render_template(
         "pizzas.html",
@@ -159,9 +157,7 @@ def snacks():
     errormessage = check_voucher_form()
 
     # cost calculation
-    total_cost = totalcost_calc(orders)
-    voucher = voucher_connect()
-    discounted_total = apply_discount(total_cost, voucher)
+    total_cost, voucher, discounted_total = calculate_totals(orders)
 
     return render_template(
         "snacks.html",
@@ -188,9 +184,7 @@ def drinks():
     errormessage = check_voucher_form()
 
     # cost calculation
-    total_cost = totalcost_calc(orders)
-    voucher = voucher_connect()
-    discounted_total = apply_discount(total_cost, voucher)
+    total_cost, voucher, discounted_total = calculate_totals(orders)
 
     return render_template(
         "drinks.html",
@@ -214,16 +208,8 @@ def customize():
     # use voucher code from the voucher_code form in HTML
     errormessage = check_voucher_form()
 
-    # total cost by summing (price * quantity) using for loop
-    total_cost = 0.0
-    for order in orders:
-        total_cost += float(order[2]) * int(order[3])
-    # rounding to 2dp in case decimal place goes over 2
-    total_cost = round(total_cost, 2)
-
     # cost calculation
-    voucher = voucher_connect()
-    discounted_total = apply_discount(total_cost, voucher)
+    total_cost, voucher, discounted_total = calculate_totals(orders)
 
     draft = draft_connect()
 
@@ -351,9 +337,7 @@ def search():
     if last_query is not None:
         results = search_menu(last_query, last_sort_by)
 
-    total_cost = totalcost_calc(orders)
-    voucher = voucher_connect()
-    discounted_total = apply_discount(total_cost, voucher)
+    total_cost, voucher, discounted_total = calculate_totals(orders)
 
     return render_template(
         "search.html",
@@ -374,9 +358,7 @@ def search():
 def checkout():
     orders = order_connect()
 
-    total_cost = totalcost_calc(orders)
-    voucher = voucher_connect()
-    discounted_total = apply_discount(total_cost, voucher)
+    total_cost, voucher, discounted_total = calculate_totals(orders)
 
     return render_template(
         "checkout.html",
