@@ -13,6 +13,22 @@ log.disabled = True
 app = Flask(__name__)
 
 
+# checks the voucher_code form (used at the top of every menu/search route)
+# triple condition for error message:
+# 1. must be a post request
+# 2. must be a voucher_code post request
+# 3. entered (by user) code must NOT be in the voucher db
+# returns an error message string if the code was invalid, or None otherwise
+def check_voucher_form():
+    if (
+        request.method == "POST"
+        and "voucher_code" in request.form
+        and not apply_voucher(request.form.get("voucher_code"))
+    ):
+        return "Invalid voucher code entered."
+    return None
+
+
 # total cost calculator (in case of any prices that are in irrational numbers
 #  or never-ending decimals such as 0.333...)
 def totalcost_calc(orders):

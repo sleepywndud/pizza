@@ -14,20 +14,7 @@ def main():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-
-    # triple condition for error message:
-    # 1. must be a post request
-    # 2. must be a voucher_code post request
-    # 3. entered (by user) code must NOT be in the voucher db
-    errormessage = None  # (init) no errors at initialization
-    if (
-        request.method == "POST"  # post req
-        and "voucher_code" in request.form  # if request is voucher code
-        and not apply_voucher(
-            request.form.get("voucher_code")
-        )  # if it ISN'T in the voucher table
-    ):
-        errormessage = "Invalid voucher code entered."
+    errormessage = check_voucher_form()
 
     # calculations involving total price and discounted price
     total_cost = totalcost_calc(orders)
@@ -169,14 +156,7 @@ def snacks():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    # triple condition to see if it's invalid voucher code
-    errormessage = None
-    if (
-        request.method == "POST"
-        and "voucher_code" in request.form
-        and not apply_voucher(request.form.get("voucher_code"))
-    ):
-        errormessage = "Invalid voucher code entered."
+    errormessage = check_voucher_form()
 
     # cost calculation
     total_cost = totalcost_calc(orders)
@@ -205,14 +185,7 @@ def drinks():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    # triple condition see if it's invalid voucher code
-    errormessage = None
-    if (
-        request.method == "POST"
-        and "voucher_code" in request.form
-        and not apply_voucher(request.form.get("voucher_code"))
-    ):
-        errormessage = "Invalid voucher code entered."
+    errormessage = check_voucher_form()
 
     # cost calculation
     total_cost = totalcost_calc(orders)
@@ -239,13 +212,7 @@ def customize():
     orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
-    errormessage = None
-    if (
-        request.method == "POST"
-        and "voucher_code" in request.form
-        and not apply_voucher(request.form.get("voucher_code"))
-    ):
-        errormessage = "Invalid voucher code entered."
+    errormessage = check_voucher_form()
 
     # total cost by summing (price * quantity) using for loop
     total_cost = 0.0
@@ -366,14 +333,7 @@ def search():
     global orders, last_query, last_sort_by
     orders = order_connect()
 
-    errormessage = None
-    # triple condition for error message again..
-    if (
-        request.method == "POST"
-        and "voucher_code" in request.form
-        and not apply_voucher(request.form.get("voucher_code"))
-    ):
-        errormessage = "Invalid voucher code entered."
+    errormessage = check_voucher_form()
 
     # last search function
     if (
