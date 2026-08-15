@@ -13,7 +13,8 @@ log.disabled = True
 app = Flask(__name__)
 
 
-# total cost calculator (in case of any prices that are in irrational numbers or never-ending decimals such as 0.333...)
+# total cost calculator (in case of any prices that are in irrational numbers
+#  or never-ending decimals such as 0.333...)
 def totalcost_calc(orders):
     total_cost = 0.0
     for order in orders:
@@ -89,12 +90,14 @@ def draft_connect():
 
 # connects to the voucher db
 def voucher_connect():
-    # returns the currently applied voucher as (code, discount_percentage), or None if none applied
+    # returns the currently applied voucher as (code, discount_percentage),
+    # or None if none applied
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     # id = 1 checks if ANY data exists in the table
     cr.execute(
-        "SELECT voucher_code, discount_percentage FROM applied_voucher WHERE voucher_id = 1"
+        "SELECT voucher_code, discount_percentage "
+        "FROM applied_voucher WHERE voucher_id = 1"
     )
     voucher = cr.fetchone()
     conn.close()
@@ -124,7 +127,8 @@ def apply_voucher(code):
     # replaces existing voucher that's applied with new voucher
     cr.execute("DELETE FROM applied_voucher WHERE voucher_id = 1")
     cr.execute(
-        "INSERT INTO applied_voucher (voucher_id, voucher_code, discount_percentage) VALUES (1, ?, ?)",
+        "INSERT INTO applied_voucher (voucher_id, voucher_code, discount_percentage) "
+        "VALUES (1, ?, ?)",
         (code, discount_percentage),
     )
 
@@ -156,6 +160,7 @@ def apply_discount(total_cost, voucher):
 
 
 # function to search ALL the items (from all categories)
+# returns a list of (item_id, name, price, image_path, rating) tuples
 def search_menu(query, sort_by=None):
     like_query = f"%{query}%"
 
@@ -167,7 +172,6 @@ def search_menu(query, sort_by=None):
     # if the query names a whole category (e.g. "drinks" or "snack"), match
     # every row in that category instead of filtering by name
 
-    # [FIX After Bobo's trial]:
     # table names and their aliases
     table_names = {
         "pizza": "pizza",
@@ -208,11 +212,14 @@ def search_menu(query, sort_by=None):
     # 3 times instead -- same shape as before, just querying one table
     # using this as a var because the code is too long to fit in the execute
     sql = f"""
-        SELECT item_id, name, price, imageURL, 'pizza/' AS folder, rating FROM menu_item WHERE category = 'pizza' AND name LIKE ?
+        SELECT item_id, name, price, imageURL, 'pizza/' AS folder, rating
+        FROM menu_item WHERE category = 'pizza' AND name LIKE ?
         UNION ALL
-        SELECT item_id, name, price, imageURL, 'snacks/' AS folder, rating FROM menu_item WHERE category = 'snack' AND name LIKE ?
+        SELECT item_id, name, price, imageURL, 'snacks/' AS folder, rating
+        FROM menu_item WHERE category = 'snack' AND name LIKE ?
         UNION ALL
-        SELECT item_id, name, price, imageURL, 'drinks/' AS folder, rating FROM menu_item WHERE category = 'drinks' AND name LIKE ?
+        SELECT item_id, name, price, imageURL, 'drinks/' AS folder, rating
+        FROM menu_item WHERE category = 'drinks' AND name LIKE ?
         ORDER BY {sort_column} {sort_direction}
     """
 
@@ -224,12 +231,14 @@ def search_menu(query, sort_by=None):
     )  # this 'rows' var holds ALL matching rows from the three categories
     conn.close()
 
-    # note that folder marks which category the row came from -- it's only used to make the image display
-    # without the folder variable, since the image's location in the directory varies,
-    # it will make image rendering difficult due to its path not being clear
+    # note that folder marks which category the row came from -- it's only
+    # used to make the image display without the folder variable, since the
+    # image's location in the directory varies, it will make image rendering
+    # difficult due to its path not being clear
 
     # each row is (id, name, price, imageURL, folder, rating); combine
-    # folder+imageURL into one path so templates get (id, name, price, image_path, rating)
+    # folder+imageURL into one path so templates get
+    # (id, name, price, image_path, rating)
     results = []
     for item_id, name, price, image, folder, rating in rows:
         results.append((item_id, name, price, folder + image, rating))

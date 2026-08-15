@@ -85,7 +85,8 @@ def update_quantity(item_id):
         print(
             "Invalid Quantity Entered."
         )  # triggered when integer quantity that doesn't fit inside 1~100 is entered
-    # if quantity is negative or too high, we just don't update anything -- send straight back to request.referrer
+    # if quantity is negative or too high,
+    # we just don't update anything -- send straight back to request.referrer
 
     conn.commit()
     conn.close()
@@ -141,9 +142,9 @@ def add_to_order(name):
                     "UPDATE cart SET quantity = ? WHERE name = ?", (new_quantity, name)
                 )
             else:
-                print(
-                    "Invalid Quantity Entered."
-                )  # triggered when integer quantity that doesn't fit inside 1~100 is entered
+                # triggered when integer quantity that doesn't fit inside
+                # 1~100 is entered
+                print("Invalid Quantity Entered.")
             # if quantity is too high, we just don't update anything
         else:
             # if item doesn't exist, then add the row to the db with quantity 1
@@ -152,7 +153,6 @@ def add_to_order(name):
                 "INSERT INTO cart (item_id, name, price, quantity) VALUES (?, ?, ?, 1)",
                 (item_id, name, price),
             )
-        #  [] =
         conn.commit()
         conn.close()
 
@@ -282,19 +282,20 @@ def customize():
 # route that adds the ingredient to the custom_pizza_draft db
 @app.route("/ingredient/<name>")
 def ingredient(name):
-    # below lines could be refactored into a function..
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
     cr.execute("SELECT ingredient_id, price FROM ingredient WHERE name = ?", (name,))
     item_data = cr.fetchone()
 
     if item_data is not None:
-        ingredient_id = item_data[0]  # id; needed for the new ingredient_id foreign key
+        # id; needed for the new ingredient_id foreign key
+        ingredient_id = item_data[0]
         price = item_data[1]
 
         # ingredient_id links this row to its ingredient row (the new foreign key)
         cr.execute(
-            "INSERT INTO custom_pizza_draft (ingredient_id, name, price) VALUES (?, ?, ?)",
+            "INSERT INTO custom_pizza_draft (ingredient_id, name, price) "
+            "VALUES (?, ?, ?)",
             (ingredient_id, name, price),
         )
         conn.commit()
@@ -303,7 +304,7 @@ def ingredient(name):
     return redirect(url_for("customize"))
 
 
-# route thta removes the ingredient from the custom_pizza_draft db
+# route that removes the ingredient from the custom_pizza_draft db
 @app.route("/remove_ingredient/<item_id>")
 def remove_ingredient(item_id):
     conn = sqlite3.connect("pizza.db")
@@ -339,10 +340,12 @@ def add_custom_to_cart():
 
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
+    # add custom pizza to cart -- item_id stays NULL since it's not one
+    # single menu_item
     cr.execute(
         "INSERT INTO cart (name, price, quantity) VALUES ('Custom Pizza', ?, 1)",
         (str(total),),
-    )  # add custom pizza to cart -- item_id stays NULL since it's not one single menu_item
+    )
     cart_id = cr.lastrowid  # id of the cart row we just inserted
 
     # link the staged ingredient rows to this cart row instead of deleting
@@ -376,9 +379,9 @@ def search():
     if (
         request.method == "POST" and "search_bar" in request.form
     ):  # triggers if search bar post req
-        last_query = (
-            request.form.get("search_bar", "").strip().lower()
-        )  # makes the user-input value the last_query so it is saved (no search history loss)
+        # makes the user-input value the last_query so it is saved
+        # (no search history loss)
+        last_query = request.form.get("search_bar", "").strip().lower()
         last_sort_by = request.form.get(
             "sort", "price-ascending"
         )  # default sorting (price ASC)
@@ -406,6 +409,7 @@ def search():
 
 
 # route to the checkout page
+# no error msg needed here since it's only a GET request
 @app.route("/checkout")
 def checkout():
     orders = order_connect()
