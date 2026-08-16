@@ -77,12 +77,14 @@ def check_quantity_form():
 def totalcost_calc():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    # item_id is a FK to menu_item so JOIN (same JOIN as order_connect)
+    # same LEFT JOIN as order_connect -- a custom pizza's cart row has
+    # item_id = NULL, so a normal JOIN would drop it from the total.
+    # cart.price is used instead of menu_item.price for the same reason.
     cr.execute(
         """
-        SELECT SUM(menu_item.price * cart.quantity)
+        SELECT SUM(cart.price * cart.quantity)
         FROM cart
-        JOIN menu_item ON cart.item_id = menu_item.item_id
+        LEFT JOIN menu_item ON cart.item_id = menu_item.item_id
         """
     )
     total_cost = cr.fetchone()[0]
@@ -130,12 +132,16 @@ def menu_connect(table="pizza", sort_by=None):
 def order_connect():
     conn = sqlite3.connect("pizza.db")
     cr = conn.cursor()
-    # item_id is a FK to menu_item so JOIN
+    # item_id is a FK to menu_item, but a custom pizza's cart row has
+    # item_id = NULL, so a normal JOIN would drop it -- use LEFT JOIN
+    # instead, and select cart.price (already stored on the cart row itself)
+    # instead of menu_item.price, since menu_item.price would be NULL for
+    # a custom pizza's row
     cr.execute(
         """
-        SELECT cart.cart_id, cart.name, menu_item.price, cart.quantity
+        SELECT cart.cart_id, cart.name, cart.price, cart.quantity
         FROM cart
-        JOIN menu_item ON cart.item_id = menu_item.item_id
+        LEFT JOIN menu_item ON cart.item_id = menu_item.item_id
         """
     )
     orders = cr.fetchall()
