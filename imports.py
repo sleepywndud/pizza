@@ -72,12 +72,27 @@ def check_quantity_form():
         return "Invalid quantity entered. Please enter a number between 1 and 100."
 
 
-# total cost calculator (in case of any prices that are in irrational numbers
-#  or never-ending decimals such as 0.333...)
-def totalcost_calc(orders):
-    total_cost = 0.0
-    for order in orders:
-        total_cost += float(order[2]) * int(order[3])
+# total cost calculator -- uses SQL's SUM() to add up price * quantity for
+# every row in the cart, instead of looping through the rows in Python
+def totalcost_calc():
+    conn = sqlite3.connect("pizza.db")
+    cr = conn.cursor()
+    # item_id is a FK to menu_item so JOIN (same JOIN as order_connect)
+    cr.execute(
+        """
+        SELECT SUM(menu_item.price * cart.quantity)
+        FROM cart
+        JOIN menu_item ON cart.item_id = menu_item.item_id
+        """
+    )
+    total_cost = cr.fetchone()[0]
+    conn.close()
+
+    # SUM() returns NULL (which becomes None in Python) when the cart is
+    # empty, since there are no rows to add up -- treat that as $0 instead
+    if total_cost is None:
+        total_cost = 0.0
+
     return round(total_cost, 2)
 
 
@@ -221,8 +236,8 @@ def apply_discount(total_cost, voucher):
 # runs the full cost calculation used by every route: cart total, the
 # currently applied voucher, and the total after discount
 # returns (total_cost, voucher, discounted_total)
-def calculate_totals(orders):
-    total_cost = totalcost_calc(orders)
+def calculate_totals():
+    total_cost = totalcost_calc()
     voucher = voucher_connect()
     discounted_total = apply_discount(total_cost, voucher)
     return total_cost, voucher, discounted_total

@@ -22,7 +22,7 @@ def main():
     orders = order_connect()
 
     # calculations involving total price and discounted price
-    total_cost, voucher, discounted_total = calculate_totals(orders)
+    total_cost, voucher, discounted_total = calculate_totals()
 
     return render_template(
         "pizzas.html",
@@ -126,7 +126,7 @@ def snacks():
     orders = order_connect()
 
     # cost calculation
-    total_cost, voucher, discounted_total = calculate_totals(orders)
+    total_cost, voucher, discounted_total = calculate_totals()
 
     return render_template(
         "snacks.html",
@@ -157,7 +157,7 @@ def drinks():
     orders = order_connect()
 
     # cost calculation
-    total_cost, voucher, discounted_total = calculate_totals(orders)
+    total_cost, voucher, discounted_total = calculate_totals()
 
     return render_template(
         "drinks.html",
@@ -187,7 +187,7 @@ def customize():
     orders = order_connect()
 
     # cost calculation
-    total_cost, voucher, discounted_total = calculate_totals(orders)
+    total_cost, voucher, discounted_total = calculate_totals()
 
     draft = draft_connect()
 
@@ -320,7 +320,7 @@ def search():
     if last_query is not None:
         results = search_menu(last_query, last_sort_by)
 
-    total_cost, voucher, discounted_total = calculate_totals(orders)
+    total_cost, voucher, discounted_total = calculate_totals()
 
     return render_template(
         "search.html",
@@ -345,7 +345,7 @@ def checkout():
     # updated quantity straight away
     orders = order_connect()
 
-    total_cost, voucher, discounted_total = calculate_totals(orders)
+    total_cost, voucher, discounted_total = calculate_totals()
 
     return render_template(
         "checkout.html",
