@@ -110,10 +110,8 @@
 								<div class="grid_order-item">
 									<!-- <p>{{ order[3] }}x {{ order[1] }}</p> -->
 									<div style="text-align: left">
-										<form
-											action="{{ url_for('update_quantity', item_id=order[0]) }}"
-											method="POST"
-										>
+										<form method="POST">
+											<input type="hidden" name="item_id" value="{{ order[0] }}">
 											<!-- uses form to pass numberinput value to the db -->
 											<input
 												type="number"

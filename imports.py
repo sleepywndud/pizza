@@ -29,6 +29,49 @@ def check_voucher_form():
     return None
 
 
+# checks the quantity form (used in the cart section of every menu/search/
+# checkout route) -- same idea as check_voucher_form:
+# 1. must be a post request
+# 2. must be a quantity post request
+# 3. entered (by user) quantity must NOT be a valid quantity
+# returns an error message string if the quantity was invalid, or None otherwise
+def check_quantity_form():
+    if request.method != "POST" or "quantity" not in request.form:
+        return None
+
+    item_id = request.form.get("item_id")
+
+    try:
+        new_quantity = int(request.form.get("quantity"))
+    except ValueError:
+        return "Invalid quantity entered. Please enter a whole number."
+
+    if 0 < new_quantity <= 100:
+        # quantity must be between 1 and 100 -- zero will delete the item
+        conn = sqlite3.connect("pizza.db")
+        cr = conn.cursor()
+        cr.execute(
+            "UPDATE cart SET quantity = ? WHERE cart_id = ?", (new_quantity, item_id)
+        )
+        conn.commit()
+        conn.close()
+        return None
+    elif new_quantity == 0:
+        # remove item if quantity is zero
+        # if this was a custom pizza, its ingredients in custom_pizza_draft
+        # are linked via item_id -- delete those first so none are left
+        conn = sqlite3.connect("pizza.db")
+        cr = conn.cursor()
+        cr.execute("DELETE FROM custom_pizza_draft WHERE item_id = ?", (item_id,))
+        cr.execute("DELETE FROM cart WHERE cart_id = ?", (item_id,))
+        conn.commit()
+        conn.close()
+        return None
+    else:
+        # triggered when integer quantity that doesn't fit inside 1~100 is entered
+        return "Invalid quantity entered. Please enter a number between 1 and 100."
+
+
 # total cost calculator (in case of any prices that are in irrational numbers
 #  or never-ending decimals such as 0.333...)
 def totalcost_calc(orders):

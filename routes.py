@@ -11,10 +11,15 @@ def main():
     global orders
     sort_by = request.form.get("sort", "price-ascending")
     data = menu_connect("pizza", sort_by)
-    orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
     errormessage = check_voucher_form()
+    # use item_id/quantity from the quantity form in HTML (in the cart section)
+    errormessage = errormessage or check_quantity_form()
+
+    # orders is fetched after the quantity form check so the cart shows the
+    # updated quantity straight away
+    orders = order_connect()
 
     # calculations involving total price and discounted price
     total_cost, voucher, discounted_total = calculate_totals(orders)
@@ -35,46 +40,6 @@ def main():
 @app.route("/remove_voucher")
 def remove_voucher_route():
     remove_voucher()
-    return redirect(request.referrer or url_for("main"))
-
-
-# route to change the quantity of the item
-@app.route("/update_quantity/<int:item_id>", methods=["POST"])
-def update_quantity(item_id):
-    # fetch quantity from the form in index.html
-    try:
-        new_quantity = int(request.form.get("quantity"))
-    except ValueError:
-        # redirect back if input is invalid (for valueerror)
-
-        # right now it basically returns to the state before the invalid input
-        return redirect(request.referrer or url_for("main"))
-
-    conn = sqlite3.connect("pizza.db")
-    cr = conn.cursor()
-
-    if (
-        0 < new_quantity <= 100
-    ):  # quantity must be between 1 and 100 -- zero will delete the item
-        # update quantity in the database to the corresponding itemid
-        cr.execute(
-            "UPDATE cart SET quantity = ? WHERE cart_id = ?", (new_quantity, item_id)
-        )
-    elif new_quantity == 0:
-        # remove item if quantity is zero
-        # if this was a custom pizza, its ingredients in custom_pizza_draft
-        # are linked via item_id -- delete those first so none are left
-        cr.execute("DELETE FROM custom_pizza_draft WHERE item_id = ?", (item_id,))
-        cr.execute("DELETE FROM cart WHERE cart_id = ?", (item_id,))
-    else:
-        print(
-            "Invalid Quantity Entered."
-        )  # triggered when integer quantity that doesn't fit inside 1~100 is entered
-    # if quantity is negative or too high,
-    # we just don't update anything -- send straight back to request.referrer
-
-    conn.commit()
-    conn.close()
     return redirect(request.referrer or url_for("main"))
 
 
@@ -151,10 +116,14 @@ def snacks():
     sort_by = request.form.get("sort", "price-ascending")
     data = menu_connect("snack", sort_by)
 
-    orders = order_connect()
-
     # use voucher code from the voucher_code form in HTML
     errormessage = check_voucher_form()
+    # use item_id/quantity from the quantity form in HTML (in the cart section)
+    errormessage = errormessage or check_quantity_form()
+
+    # orders is fetched after the quantity form check so the cart shows the
+    # updated quantity straight away
+    orders = order_connect()
 
     # cost calculation
     total_cost, voucher, discounted_total = calculate_totals(orders)
@@ -178,10 +147,14 @@ def drinks():
     sort_by = request.form.get("sort", "price-ascending")
     data = menu_connect("drinks", sort_by)
 
-    orders = order_connect()
-
     # use voucher code from the voucher_code form in HTML
     errormessage = check_voucher_form()
+    # use item_id/quantity from the quantity form in HTML (in the cart section)
+    errormessage = errormessage or check_quantity_form()
+
+    # orders is fetched after the quantity form check so the cart shows the
+    # updated quantity straight away
+    orders = order_connect()
 
     # cost calculation
     total_cost, voucher, discounted_total = calculate_totals(orders)
@@ -203,10 +176,15 @@ def drinks():
 def customize():
     global orders
     data = menu_connect("ingredient")
-    orders = order_connect()
 
     # use voucher code from the voucher_code form in HTML
     errormessage = check_voucher_form()
+    # use item_id/quantity from the quantity form in HTML (in the cart section)
+    errormessage = errormessage or check_quantity_form()
+
+    # orders is fetched after the quantity form check so the cart shows the
+    # updated quantity straight away
+    orders = order_connect()
 
     # cost calculation
     total_cost, voucher, discounted_total = calculate_totals(orders)
@@ -317,9 +295,14 @@ def add_custom_to_cart():
 @app.route("/search", methods=["GET", "POST"])
 def search():
     global orders, last_query, last_sort_by
-    orders = order_connect()
 
     errormessage = check_voucher_form()
+    # use item_id/quantity from the quantity form in HTML (in the cart section)
+    errormessage = errormessage or check_quantity_form()
+
+    # orders is fetched after the quantity form check so the cart shows the
+    # updated quantity straight away
+    orders = order_connect()
 
     # last search function
     if (
@@ -353,9 +336,13 @@ def search():
 
 
 # route to the checkout page
-# no error msg needed here since it's only a GET request
-@app.route("/checkout")
+@app.route("/checkout", methods=["GET", "POST"])
 def checkout():
+    # use item_id/quantity from the quantity form in HTML (in the cart section)
+    errormessage = check_quantity_form()
+
+    # orders is fetched after the quantity form check so the cart shows the
+    # updated quantity straight away
     orders = order_connect()
 
     total_cost, voucher, discounted_total = calculate_totals(orders)
@@ -366,4 +353,5 @@ def checkout():
         total_cost=total_cost,
         voucher=voucher,
         discounted_total=discounted_total,
+        errormessage=errormessage,
     )

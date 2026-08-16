@@ -36,6 +36,11 @@
 				<h1>Review your selection:</h1>
 				<div class="line-divider"></div>
 
+				<!-- red error message for invalid quantity entries -->
+				{% if errormessage %}
+				<p style="color: var(--oh-no)">{{ errormessage }}</p>
+				{% endif %}
+
 				<div class="checkout-grid">
 					<!-- item list box start -->
 					<div class="checkout-box">
@@ -44,10 +49,9 @@
 							{% for order in orders %}
 							<!-- displays the name (col1), quantity (col2), and price (col3) of the item added to cart -->
 							<p style="text-align: left; margin: 0">{{ order[1] }}</p>
-							<form
-								action="{{ url_for('update_quantity', item_id=order[0]) }}"
-								method="POST"
-							>
+							<!-- posts back to this same page, same as the voucher form does -->
+							<form method="POST">
+								<input type="hidden" name="item_id" value="{{ order[0] }}">
 								<!-- uses form to pass numberinput value to the db -->
 								<input
 									type="number"
